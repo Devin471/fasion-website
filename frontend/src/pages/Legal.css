@@ -1,0 +1,7 @@
+/* ─── Legal Pages CSS ──────────────────────────────── */
+.legal-page { max-width:800px; margin:0 auto; padding:3rem 1.5rem; }
+.legal-content { background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); padding:2rem; }
+.legal-content section { padding:1.2rem 0; border-bottom:1px solid rgba(255,255,255,.05); }
+.legal-content section:last-child { border-bottom:none; }
+.legal-content h3 { color:var(--gold); font-size:1rem; margin-bottom:.5rem; }
+.legal-content p { color:rgba(255,255,255,.55); font-size:.9rem; line-height:1.8; }

@@ -1,0 +1,15 @@
+/* ─── Checkout CSS ─────────────────────────────────── */
+.checkout-page { max-width:1400px; margin:0 auto; padding:2rem 1.5rem; min-height:60vh; }
+.checkout-page h1 { color:#fff; font-size:1.6rem; font-weight:700; margin-bottom:1.5rem; }
+.checkout-layout { display:grid; grid-template-columns:1fr 380px; gap:2rem; }
+.checkout-form { background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); padding:1.8rem; }
+.checkout-form h3 { color:#fff; margin-bottom:1.2rem; font-size:1.1rem; }
+.checkout-summary { position:sticky; top:90px; background:var(--glass); border:1px solid rgba(212,168,67,.1); border-radius:var(--radius-lg); padding:1.5rem; height:fit-content; }
+.checkout-summary h3 { color:#fff; font-size:1.05rem; margin-bottom:1rem; padding-bottom:.8rem; border-bottom:1px solid rgba(212,168,67,.1); }
+.cos-item { display:flex; align-items:center; gap:.8rem; padding:.6rem 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.cos-item img { width:50px; height:55px; object-fit:cover; border-radius:6px; }
+.cos-name { color:rgba(255,255,255,.8); font-size:.82rem; }
+.cos-qty { color:rgba(255,255,255,.35); font-size:.75rem; }
+.cos-price { margin-left:auto; color:var(--gold); font-weight:600; font-size:.88rem; }
+.checkout-summary hr { border:none; border-top:1px solid rgba(212,168,67,.1); margin:.8rem 0; }
+@media(max-width:768px) { .checkout-layout { grid-template-columns:1fr; } }

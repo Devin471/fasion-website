@@ -1,0 +1,9 @@
+/* ─── FAQ CSS ──────────────────────────────────────── */
+.faq-page { max-width:800px; margin:0 auto; padding:3rem 1.5rem; }
+.faq-list { display:flex; flex-direction:column; gap:.8rem; }
+.faq-item { background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); overflow:hidden; cursor:pointer; transition:border .3s; }
+.faq-item:hover, .faq-item.open { border-color:rgba(212,168,67,.2); }
+.faq-q { display:flex; justify-content:space-between; align-items:center; padding:1.2rem 1.5rem; color:#fff; font-weight:500; font-size:.95rem; }
+.faq-arrow { color:var(--gold); font-size:1.2rem; font-weight:300; }
+.faq-a { padding:0 1.5rem 1.2rem; }
+.faq-a p { color:rgba(255,255,255,.5); font-size:.88rem; line-height:1.7; }

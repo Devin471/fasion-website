@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════
+   ShopKart — App Shell Styles
+   ═══════════════════════════════════════════════════════ */
+
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.main-content { flex: 1; }
+
+/* ─── Container ───────────────────────────────────────── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.container-sm { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+/* ─── Buttons ─────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 24px; border: none; border-radius: var(--radius); cursor: pointer;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.3px;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--dark-2); box-shadow: var(--shadow-gold);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(212,168,67,0.35); }
+
+.btn-secondary { background: var(--glass); color: var(--text); border: 1px solid var(--glass-border); }
+.btn-secondary:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.15); }
+
+.btn-outline { background: transparent; color: var(--gold); border: 1px solid rgba(212,168,67,0.4); }
+.btn-outline:hover { background: rgba(212,168,67,0.08); border-color: var(--gold); }
+
+.btn-danger { background: rgba(248,113,113,0.15); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+.btn-danger:hover { background: rgba(248,113,113,0.25); }
+
+.btn-sm { padding: 8px 16px; font-size: 12px; }
+.btn-lg { padding: 16px 32px; font-size: 16px; }
+
+/* ─── Cards ───────────────────────────────────────────── */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: var(--transition);
+}
+.card:hover { border-color: rgba(255,255,255,0.12); }
+
+/* ─── Form ────────────────────────────────────────────── */
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 12px 14px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius); color: #fff; font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s; outline: none;
+}
+.form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-dim); }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: rgba(212,168,67,0.5); box-shadow: 0 0 0 3px rgba(212,168,67,0.08); }
+.form-group select { appearance: auto; }
+.form-group textarea { resize: vertical; min-height: 100px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:600px) { .form-row { grid-template-columns: 1fr; } }
+
+/* ─── Badges ──────────────────────────────────────────── */
+.badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+.badge-success { background: rgba(74,222,128,0.15); color: var(--success); }
+.badge-danger { background: rgba(248,113,113,0.15); color: var(--danger); }
+.badge-warning { background: rgba(251,191,36,0.15); color: var(--warning); }
+.badge-info { background: rgba(96,165,250,0.15); color: #60a5fa; }
+.badge-gold { background: rgba(212,168,67,0.15); color: var(--gold); }
+
+/* ─── Stars ───────────────────────────────────────────── */
+.stars { color: #fbbf24; font-size: 14px; letter-spacing: 1px; }
+.stars-empty { color: var(--dark-4); }
+
+/* ─── Loading ─────────────────────────────────────────── */
+.loading-page { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--dark-4); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── 404 ─────────────────────────────────────────────── */
+.page-404 { text-align: center; padding: 120px 20px; }
+.page-404 h1 { font-size: 80px; color: var(--gold); margin-bottom: 8px; }
+.page-404 p { color: var(--text-muted); font-size: 18px; margin-bottom: 24px; }
+
+/* ─── Section ─────────────────────────────────────────── */
+.section { padding: 48px 0; }
+.section-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
+.section-title span { color: var(--gold); }
+
+/* ─── Grid ────────────────────────────────────────────── */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+@media(max-width:600px) { .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+
+/* ─── Empty state ─────────────────────────────────────── */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-state h3 { font-size: 20px; color: var(--text); margin-bottom: 8px; }
+.empty-state p { color: var(--text-muted); margin-bottom: 20px; }
+
+/* ─── Responsive ──────────────────────────────────────── */
+@media(max-width:768px) {
+  .container { padding: 0 16px; }
+  .section { padding: 32px 0; }
+}

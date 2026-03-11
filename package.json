@@ -1,0 +1,21 @@
+{
+  "name": "fashion-design-ecommerce",
+  "version": "1.0.0",
+  "description": "Complete Fashion Design E-Commerce Platform",
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "fashion",
+    "ecommerce",
+    "design",
+    "clothing"
+  ],
+  "engines": {
+    "node": "14.0.0",
+    "python": "3.8.0"
+  }
+}

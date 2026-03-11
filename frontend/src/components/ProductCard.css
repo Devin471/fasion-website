@@ -1,0 +1,20 @@
+/* ─── Product Card CSS — Golden Luxury ─────────────── */
+.product-card { background:var(--glass); border:1px solid rgba(212,168,67,.1); border-radius:var(--radius-lg); overflow:hidden; transition:all .35s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; }
+.product-card:hover { transform:translateY(-6px); border-color:rgba(212,168,67,.25); box-shadow:0 16px 50px rgba(0,0,0,.35); }
+.pc-img-wrap { position:relative; overflow:hidden; aspect-ratio:3/3.5; background:#1a1917; }
+.pc-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+.product-card:hover .pc-img-wrap img { transform:scale(1.06); }
+.pc-badge { position:absolute; top:10px; left:10px; background:linear-gradient(135deg,#e74c3c,#c0392b); color:#fff; font-size:.7rem; font-weight:700; padding:.25rem .55rem; border-radius:4px; }
+.pc-wish { position:absolute; top:10px; right:10px; width:34px; height:34px; border-radius:50%; background:rgba(0,0,0,.45); backdrop-filter:blur(6px); border:none; color:#fff; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .3s; }
+.pc-wish:hover, .pc-wish.active { background:rgba(212,168,67,.2); color:var(--gold); }
+.pc-body { padding:1rem 1.1rem 1.2rem; display:flex; flex-direction:column; gap:.4rem; flex:1; }
+.pc-name { color:#fff; font-size:.92rem; font-weight:600; text-decoration:none; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; transition:color .3s; }
+.pc-name:hover { color:var(--gold); }
+.pc-brand { color:rgba(255,255,255,.4); font-size:.75rem; text-transform:uppercase; letter-spacing:.8px; }
+.pc-price-row { display:flex; align-items:center; gap:.5rem; }
+.pc-price { color:var(--gold); font-size:1.05rem; font-weight:700; }
+.pc-original { color:rgba(255,255,255,.35); font-size:.82rem; text-decoration:line-through; }
+.pc-rating { color:var(--gold); font-size:.82rem; }
+.pc-reviews { color:rgba(255,255,255,.35); font-size:.75rem; margin-left:.3rem; }
+.pc-add-btn { margin-top:auto; padding:.55rem; width:100%; border:1px solid rgba(212,168,67,.3); background:transparent; color:var(--gold); font-size:.82rem; font-weight:600; border-radius:var(--radius); cursor:pointer; transition:all .3s; font-family:inherit; }
+.pc-add-btn:hover { background:var(--gold); color:#000; }
