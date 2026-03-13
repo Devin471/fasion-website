@@ -33,7 +33,8 @@ export default function Navbar() {
       <div className="nav-container">
         <Link to="/" className="nav-logo">
           <span className="logo-icon">♦</span>
-          <span className="logo-text">SHOP<span className="logo-gold">KART</span></span>
+          <img src="/logo-mf.svg" alt="MF Logo" className="logo-icon" style={{width:'2rem',height:'2rem',marginRight:'0.3rem'}} />
+          <span className="logo-text">MY<span className="logo-gold">FASION</span></span>
         </Link>
 
         <div className="nav-links-main">
