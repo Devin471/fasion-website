@@ -69,6 +69,8 @@ function Products() {
 
 function AddProduct() {
   const navigate = useNavigate();
+  const { seller: sellerContext, logoutSeller } = useAuth();
+  const [seller, setSeller] = useState(sellerContext);
   const [cats, setCats] = useState([]);
   const [form, setForm] = useState({ name: '', description: '', price: '', originalPrice: '', category: '', brand: '', stock: '', sizes: '', colors: '', tags: '' });
   const [imageFiles, setImageFiles] = useState([]);
@@ -76,6 +78,17 @@ function AddProduct() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const requiredCategoryNames = ['Men', 'Women', 'Kids'];
+
+  useEffect(() => {
+    // Always fetch latest seller status
+    api.get('/auth/seller/me').then(r => {
+      setSeller(r.data);
+      // Optionally update localStorage
+      localStorage.setItem('seller', JSON.stringify(r.data));
+    }).catch(() => {
+      setSeller(sellerContext);
+    });
+  }, []);
 
   const getOrderedCategories = () => {
     const byName = (name) => cats.find((c) => c.name?.toLowerCase() === name.toLowerCase());
@@ -130,36 +143,42 @@ function AddProduct() {
   return (
     <div>
       <h2>Add New Product</h2>
-      <form className="sd-form" onSubmit={handleSubmit}>
-        {error && <div className="auth-error" style={{ marginBottom: '1rem' }}>{error}</div>}
-        <div className="form-row"><div className="form-group"><label>Product Name</label><input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
-          <div className="form-group"><label>Brand</label><input value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} /></div></div>
-        <div className="form-group"><label>Description</label><textarea rows={3} required value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
-        <div className="form-row"><div className="form-group"><label>Price (₹)</label><input type="number" required value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} /></div>
-          <div className="form-group"><label>Original Price</label><input type="number" value={form.originalPrice} onChange={e => setForm(f => ({ ...f, originalPrice: e.target.value }))} /></div>
-          <div className="form-group"><label>Stock</label><input type="number" required value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} /></div></div>
-        <div className="form-group">
-          <label>Category</label>
-          <select required value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
-            <option value="">Select</option>
-            {getOrderedCategories().map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
-            {missingRequired.map((name) => <option key={`missing-${name}`} value="" disabled>{name} (ask admin to create)</option>)}
-          </select>
+      {seller && seller.status !== 'approved' ? (
+        <div className="auth-error" style={{ marginBottom: '1rem' }}>
+          Your account is <b>{seller.status}</b>. You cannot add products until approved by admin.
         </div>
-        <div className="form-group">
-          <label>Upload Product Images</label>
-          <input type="file" multiple accept="image/*" onChange={handleImageSelect} />
-          {imagePreviews.length > 0 && (
-            <div className="sd-image-previews">
-              {imagePreviews.map((src, idx) => <img key={idx} src={src} alt={`Preview ${idx + 1}`} />)}
-            </div>
-          )}
-        </div>
-        <div className="form-row"><div className="form-group"><label>Sizes</label><input placeholder="S, M, L, XL" value={form.sizes} onChange={e => setForm(f => ({ ...f, sizes: e.target.value }))} /></div>
-          <div className="form-group"><label>Colors</label><input placeholder="Red, Blue" value={form.colors} onChange={e => setForm(f => ({ ...f, colors: e.target.value }))} /></div></div>
-        <div className="form-group"><label>Tags</label><input placeholder="trending, new" value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} /></div>
-        <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Adding...' : 'Add Product'}</button>
-      </form>
+      ) : (
+        <form className="sd-form" onSubmit={handleSubmit}>
+          {error && <div className="auth-error" style={{ marginBottom: '1rem' }}>{error}</div>}
+          <div className="form-row"><div className="form-group"><label>Product Name</label><input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div className="form-group"><label>Brand</label><input value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} /></div></div>
+          <div className="form-group"><label>Description</label><textarea rows={3} required value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
+          <div className="form-row"><div className="form-group"><label>Price (₹)</label><input type="number" required value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} /></div>
+            <div className="form-group"><label>Original Price</label><input type="number" value={form.originalPrice} onChange={e => setForm(f => ({ ...f, originalPrice: e.target.value }))} /></div>
+            <div className="form-group"><label>Stock</label><input type="number" required value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} /></div></div>
+          <div className="form-group">
+            <label>Category</label>
+            <select required value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} disabled={seller && seller.status !== 'approved'}>
+              <option value="">Select</option>
+              {getOrderedCategories().map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+              {missingRequired.map((name) => <option key={`missing-${name}`} value="" disabled>{name} (ask admin to create)</option>)}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Upload Product Images</label>
+            <input type="file" multiple accept="image/*" onChange={handleImageSelect} disabled={seller && seller.status !== 'approved'} />
+            {imagePreviews.length > 0 && (
+              <div className="sd-image-previews">
+                {imagePreviews.map((src, idx) => <img key={idx} src={src} alt={`Preview ${idx + 1}`} />)}
+              </div>
+            )}
+          </div>
+          <div className="form-row"><div className="form-group"><label>Sizes</label><input placeholder="S, M, L, XL" value={form.sizes} onChange={e => setForm(f => ({ ...f, sizes: e.target.value }))} disabled={seller && seller.status !== 'approved'} /></div>
+            <div className="form-group"><label>Colors</label><input placeholder="Red, Blue" value={form.colors} onChange={e => setForm(f => ({ ...f, colors: e.target.value }))} disabled={seller && seller.status !== 'approved'} /></div></div>
+          <div className="form-group"><label>Tags</label><input placeholder="trending, new" value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} disabled={seller && seller.status !== 'approved'} /></div>
+          <button type="submit" className="btn btn-primary" disabled={loading || (seller && seller.status !== 'approved')}>{loading ? 'Adding...' : 'Add Product'}</button>
+        </form>
+      )}
     </div>
   );
 }
