@@ -5,6 +5,10 @@ const Seller = require('../models/Seller');
 const Admin = require('../models/Admin');
 const { generateToken } = require('../middleware/auth');
 
+function randomPassword() {
+  return `g_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+}
+
 /* ── Customer ── */
 router.post('/register', async (req, res) => {
   try {
@@ -62,6 +66,63 @@ router.post('/admin/register', async (req, res) => {
     const admin = await Admin.create({ name, email, password });
     res.status(201).json({ token: generateToken(admin._id, 'admin'), admin: { id: admin._id, name: admin.name, email: admin.email } });
   } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+/* ── Google Auth (Customer/Seller) ── */
+router.post('/google', async (req, res) => {
+  try {
+    const { accessToken, role = 'customer' } = req.body;
+    if (!accessToken) return res.status(400).json({ error: 'Google access token is required' });
+    if (!['customer', 'seller'].includes(role)) return res.status(400).json({ error: 'Invalid role' });
+
+    const googleRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    if (!googleRes.ok) return res.status(401).json({ error: 'Invalid Google token' });
+    const profile = await googleRes.json();
+
+    if (!profile?.email || profile?.email_verified === false) {
+      return res.status(400).json({ error: 'Google account email is not verified' });
+    }
+
+    if (role === 'seller') {
+      let seller = await Seller.findOne({ email: profile.email.toLowerCase() });
+      if (!seller) {
+        seller = await Seller.create({
+          name: profile.name || 'Seller',
+          email: profile.email.toLowerCase(),
+          password: randomPassword(),
+          businessName: `${profile.name || 'Seller'} Store`,
+          description: 'Registered with Google',
+          status: 'approved'
+        });
+      }
+      return res.json({
+        token: generateToken(seller._id, 'seller'),
+        seller: { id: seller._id, name: seller.name, email: seller.email, businessName: seller.businessName, status: seller.status }
+      });
+    }
+
+    let user = await User.findOne({ email: profile.email.toLowerCase() });
+    if (!user) {
+      user = await User.create({
+        name: profile.name || 'Customer',
+        email: profile.email.toLowerCase(),
+        password: randomPassword(),
+        avatar: profile.picture || ''
+      });
+    }
+
+    if (!user.isActive) return res.status(403).json({ error: 'Account deactivated' });
+
+    return res.json({
+      token: generateToken(user._id, 'customer'),
+      user: { id: user._id, name: user.name, email: user.email, phone: user.phone, avatar: user.avatar }
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

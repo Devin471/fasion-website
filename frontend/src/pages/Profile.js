@@ -1,11 +1,9 @@
 /* ─── Profile Page — Golden Luxury ─────────────────── */
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import './Profile.css';
 
 export default function Profile() {
-  const { customer } = useAuth();
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '' });

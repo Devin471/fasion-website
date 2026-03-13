@@ -1,30 +1,30 @@
 /* ─── Seller/Admin Dashboard CSS — Golden Luxury ──── */
 .sd-layout { display:grid; grid-template-columns:260px 1fr; min-height:100vh; }
-.sd-sidebar { background:rgba(12,11,10,.98); border-right:1px solid rgba(212,168,67,.1); padding:1.5rem 0; display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.sd-sidebar { background:#ffffff; border-right:1px solid var(--line); padding:1.5rem 0; display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto; }
 .sd-brand { padding:0 1.5rem 1.5rem; border-bottom:1px solid rgba(212,168,67,.08); }
-.sd-brand a { text-decoration:none; color:#fff; font-weight:800; font-size:1.1rem; letter-spacing:1px; }
+.sd-brand a { text-decoration:none; color:var(--text); font-weight:800; font-size:1.1rem; letter-spacing:1px; }
 .sd-role { display:block; color:var(--gold); font-size:.72rem; text-transform:uppercase; letter-spacing:2px; margin-top:.3rem; }
 .sd-sidebar nav { flex:1; padding:1rem 0; }
-.sd-nav-link { display:flex; align-items:center; gap:.7rem; padding:.7rem 1.5rem; color:rgba(255,255,255,.5); text-decoration:none; font-size:.88rem; transition:all .2s; border-left:3px solid transparent; }
-.sd-nav-link:hover { color:rgba(255,255,255,.8); background:rgba(212,168,67,.04); }
+.sd-nav-link { display:flex; align-items:center; gap:.7rem; padding:.7rem 1.5rem; color:var(--text-muted); text-decoration:none; font-size:.88rem; transition:all .2s; border-left:3px solid transparent; }
+.sd-nav-link:hover { color:var(--text); background:rgba(255,111,97,.08); }
 .sd-nav-link.active { color:var(--gold); background:rgba(212,168,67,.08); border-left-color:var(--gold); }
 .sd-sidebar-footer { padding:1rem 1.5rem; border-top:1px solid rgba(212,168,67,.08); }
 .sd-user-info { display:flex; align-items:center; gap:.6rem; margin-bottom:.6rem; }
 .sd-user-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#000; font-size:.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
-.sd-user-info span:last-child { color:rgba(255,255,255,.7); font-size:.85rem; }
+.sd-user-info span:last-child { color:var(--text-muted); font-size:.85rem; }
 .sd-sidebar-footer button { width:100%; padding:.5rem; background:rgba(231,76,60,.1); border:1px solid rgba(231,76,60,.2); color:#e74c3c; border-radius:var(--radius); cursor:pointer; font-size:.82rem; font-family:inherit; transition:all .3s; }
 .sd-sidebar-footer button:hover { background:rgba(231,76,60,.2); }
 
 .sd-main { padding:2rem; overflow-y:auto; }
-.sd-main h2 { color:#fff; font-size:1.4rem; font-weight:700; margin-bottom:1.5rem; }
+.sd-main h2 { color:var(--text); font-size:1.4rem; font-weight:700; margin-bottom:1.5rem; }
 
 /* Stats Grid */
 .sd-stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.2rem; margin-bottom:2rem; }
 .sd-stat-card { display:flex; align-items:center; gap:1rem; padding:1.3rem; background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); transition:border .3s; }
 .sd-stat-card:hover { border-color:rgba(212,168,67,.2); }
 .sd-stat-icon { font-size:1.8rem; }
-.sd-stat-val { color:#fff; font-size:1.3rem; font-weight:700; }
-.sd-stat-label { color:rgba(255,255,255,.4); font-size:.78rem; text-transform:uppercase; letter-spacing:.8px; }
+.sd-stat-val { color:var(--text); font-size:1.3rem; font-weight:700; }
+.sd-stat-label { color:var(--text-dim); font-size:.78rem; text-transform:uppercase; letter-spacing:.8px; }
 
 /* Section Header */
 .sd-section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
@@ -34,7 +34,7 @@
 .sd-table-wrap { overflow-x:auto; background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); }
 .sd-table { width:100%; border-collapse:collapse; }
 .sd-table th { text-align:left; padding:.8rem 1rem; color:var(--gold); font-size:.78rem; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid rgba(212,168,67,.1); }
-.sd-table td { padding:.8rem 1rem; color:rgba(255,255,255,.7); font-size:.88rem; border-bottom:1px solid rgba(255,255,255,.04); }
+.sd-table td { padding:.8rem 1rem; color:var(--text-muted); font-size:.88rem; border-bottom:1px solid rgba(31,41,55,.06); }
 .sd-product-cell { display:flex; align-items:center; gap:.6rem; }
 .sd-product-cell img { width:40px; height:45px; object-fit:cover; border-radius:6px; }
 .sd-badge { padding:.25rem .6rem; border-radius:20px; font-size:.72rem; font-weight:600; }
@@ -48,11 +48,26 @@
 .sd-action-btn:hover { background:var(--gold); color:#000; }
 .sd-action-btn.danger { background:rgba(231,76,60,.08); border-color:rgba(231,76,60,.2); color:#e74c3c; }
 .sd-action-btn.danger:hover { background:#e74c3c; color:#fff; }
-.sd-table select { padding:.3rem .5rem; background:rgba(255,255,255,.05); border:1px solid rgba(212,168,67,.15); border-radius:4px; color:#fff; font-size:.82rem; cursor:pointer; }
+.sd-table select { padding:.3rem .5rem; background:#fff; border:1px solid rgba(31,41,55,.2); border-radius:4px; color:var(--text); font-size:.82rem; cursor:pointer; }
 
 /* Form */
 .sd-form { max-width:700px; background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); padding:1.8rem; }
 .form-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+
+.sd-image-previews {
+  margin-top: 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.6rem;
+}
+
+.sd-image-previews img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.15);
+}
 
 /* Reviews */
 .sd-reviews { display:flex; flex-direction:column; gap:1rem; }

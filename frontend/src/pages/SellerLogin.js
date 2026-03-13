@@ -2,10 +2,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getGoogleAccessToken } from '../utils/googleAuth';
 import './CustomerLogin.css';
 
 export default function SellerLogin() {
-  const { loginSeller } = useAuth();
+  const { loginSeller, loginSellerWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPwd, setShowPwd] = useState(false);
@@ -18,6 +19,19 @@ export default function SellerLogin() {
     setLoading(true);
     try { await loginSeller(form.email, form.password); navigate('/seller/dashboard'); }
     catch (err) { setError(err.response?.data?.message || 'Login failed'); }
+    setLoading(false);
+  };
+
+  const handleGoogle = async () => {
+    try {
+      setError('');
+      setLoading(true);
+      const accessToken = await getGoogleAccessToken();
+      await loginSellerWithGoogle(accessToken);
+      navigate('/seller/dashboard');
+    } catch (err) {
+      setError(err.message || err.response?.data?.error || 'Google sign-in failed');
+    }
     setLoading(false);
   };
 
@@ -47,6 +61,9 @@ export default function SellerLogin() {
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>{loading ? 'Signing in...' : 'Sign In'}</button>
           <p className="auth-switch">New seller? <Link to="/seller/register">Register Here</Link></p>
           <div className="auth-divider"><span>or</span></div>
+          <div className="auth-socials">
+            <button type="button" className="social-btn" onClick={handleGoogle} disabled={loading}>Continue with Google</button>
+          </div>
           <div className="auth-roles"><Link to="/login" className="role-link">Customer Login →</Link><Link to="/admin/login" className="role-link">Admin Login →</Link></div>
         </form>
       </div>

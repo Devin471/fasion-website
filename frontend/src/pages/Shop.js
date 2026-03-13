@@ -1,6 +1,6 @@
 /* ─── Shop Page — Golden Luxury ────────────────────── */
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import './Shop.css';
@@ -17,6 +17,8 @@ export default function Shop() {
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
     brand: searchParams.get('brand') || '',
+    size: searchParams.get('size') || '',
+    color: searchParams.get('color') || '',
   });
   const page = parseInt(searchParams.get('page')) || 1;
 
@@ -32,6 +34,8 @@ export default function Shop() {
         if (filters.minPrice) params.set('minPrice', filters.minPrice);
         if (filters.maxPrice) params.set('maxPrice', filters.maxPrice);
         if (filters.brand) params.set('brand', filters.brand);
+        if (filters.size) params.set('size', filters.size);
+        if (filters.color) params.set('color', filters.color);
         const { data } = await api.get(`/products?${params}`);
         setProducts(data.products || data);
         setTotal(data.total || 0);
@@ -45,13 +49,16 @@ export default function Shop() {
   return (
     <div className="shop-page">
       <aside className="shop-sidebar">
-        <h3>Filters</h3>
+        <h3>Filters & Categories</h3>
         <div className="filter-group">
           <h4>Categories</h4>
           <ul>
-            <li><a href="/shop" className={!category ? 'active' : ''}>All</a></li>
+            <li><Link to="/shop" className={!category ? 'active' : ''}>All</Link></li>
+            <li><Link to="/shop/women" className={category === 'women' ? 'active' : ''}>Women</Link></li>
+            <li><Link to="/shop/men" className={category === 'men' ? 'active' : ''}>Men</Link></li>
+            <li><Link to="/shop/kids" className={category === 'kids' ? 'active' : ''}>Kids</Link></li>
             {categories.map(c => (
-              <li key={c._id}><a href={`/shop/${c.slug}`} className={category === c.slug ? 'active' : ''}>{c.name}</a></li>
+              <li key={c._id}><Link to={`/shop/${c.slug}`} className={category === c.slug ? 'active' : ''}>{c.name}</Link></li>
             ))}
           </ul>
         </div>
@@ -67,18 +74,54 @@ export default function Shop() {
           <h4>Brand</h4>
           <input className="brand-input" placeholder="Search brand" value={filters.brand} onChange={e => setFilters(f => ({ ...f, brand: e.target.value }))} />
         </div>
+        <div className="filter-group">
+          <h4>Size</h4>
+          <div className="chip-row">
+            {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
+              <button
+                key={size}
+                type="button"
+                className={`filter-chip ${filters.size === size ? 'active' : ''}`}
+                onClick={() => setFilters(f => ({ ...f, size: f.size === size ? '' : size }))}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="filter-group">
+          <h4>Color</h4>
+          <div className="chip-row">
+            {['Black', 'White', 'Beige', 'Blue', 'Red'].map((color) => (
+              <button
+                key={color}
+                type="button"
+                className={`filter-chip ${filters.color === color ? 'active' : ''}`}
+                onClick={() => setFilters(f => ({ ...f, color: f.color === color ? '' : color }))}
+              >
+                {color}
+              </button>
+            ))}
+          </div>
+        </div>
       </aside>
 
       <div className="shop-main">
         <div className="shop-topbar">
-          <p className="shop-count">{total} products found</p>
-          <select value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value }))}>
-            <option value="newest">Newest First</option>
-            <option value="price_low">Price: Low to High</option>
-            <option value="price_high">Price: High to Low</option>
-            <option value="popular">Most Popular</option>
-            <option value="rating">Top Rated</option>
-          </select>
+          <div>
+            <h2>{category ? `${category[0].toUpperCase()}${category.slice(1)}` : 'All Products'}</h2>
+            <p className="shop-count">{total} products found</p>
+          </div>
+          <div className="shop-sort">
+            <label htmlFor="shop-sort">Sort by</label>
+            <select id="shop-sort" value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value }))}>
+              <option value="newest">Newest</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="popular">Popularity</option>
+              <option value="rating">Top Rated</option>
+            </select>
+          </div>
         </div>
 
         {loading ? (

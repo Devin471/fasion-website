@@ -36,6 +36,14 @@ export default function Navbar() {
           <span className="logo-text">SHOP<span className="logo-gold">KART</span></span>
         </Link>
 
+        <div className="nav-links-main">
+          <Link to="/">Home</Link>
+          <Link to="/shop">Shop</Link>
+          <Link to="/shop">Categories</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+        </div>
+
         <form className="nav-search" onSubmit={handleSearch}>
           <input type="text" placeholder="Search for products, brands and more..." value={query} onChange={e => setQuery(e.target.value)} />
           <button type="submit">⌕</button>
@@ -98,6 +106,9 @@ export default function Navbar() {
           </form>
           <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/shop" onClick={() => setMenuOpen(false)}>Shop</Link>
+          <Link to="/shop" onClick={() => setMenuOpen(false)}>Categories</Link>
+          <Link to="/about" onClick={() => setMenuOpen(false)}>About</Link>
+          <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
           {isCustomer && <Link to="/orders" onClick={() => setMenuOpen(false)}>Orders</Link>}
           {isCustomer && <Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>}
           {!isCustomer && !isSeller && !isAdmin && <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>}

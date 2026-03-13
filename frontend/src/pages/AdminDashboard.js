@@ -100,27 +100,58 @@ function AdminProducts() {
   );
 }
 
-/* ── Categories ── */
-function Categories() {
-  const [cats, setCats] = useState([]);
-  const [form, setForm] = useState({ name: '', description: '', image: '' });
-  useEffect(() => { api.get('/categories').then(r => setCats(r.data)).catch(() => {}); }, []);
-  const addCat = async e => { e.preventDefault(); try { const { data } = await api.post('/categories', form); setCats(c => [...c, data]); setForm({ name: '', description: '', image: '' }); } catch {} };
-  const deleteCat = async id => { try { await api.delete(`/categories/${id}`); setCats(c => c.filter(x => x._id !== id)); } catch {} };
+function AdminReviews() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => { api.get('/admin/products').then(r => setProducts(r.data.products || r.data)).catch(() => {}); }, []);
   return (
     <div>
-      <h2>Categories</h2>
-      <form className="sd-form" onSubmit={addCat} style={{ marginBottom: '1.5rem' }}>
+      <h2>Reviews & Ratings</h2>
+      <div className="sd-table-wrap"><table className="sd-table">
+        <thead><tr><th>Product</th><th>Rating</th><th>Reviews</th><th>Approval</th></tr></thead>
+        <tbody>{products.map(p => (
+          <tr key={p._id}>
+            <td><div className="sd-product-cell"><img src={p.images?.[0] || 'https://via.placeholder.com/40'} alt="" /><span>{p.name}</span></div></td>
+            <td>{(p.rating || 0).toFixed(1)} / 5</td>
+            <td>{p.numReviews || 0}</td>
+            <td><span className={`sd-badge ${p.isApproved ? 'approved' : 'pending'}`}>{p.isApproved ? 'Approved' : 'Pending'}</span></td>
+          </tr>
+        ))}</tbody>
+      </table></div>
+    </div>
+  );
+}
+
+/* ── Categories ── */
+function Coupons() {
+  const [form, setForm] = useState({ code: '', discount: '', expiresOn: '' });
+  const [coupons, setCoupons] = useState([
+    { code: 'STYLE10', discount: 10, expiresOn: '2026-12-31', status: 'active' },
+    { code: 'WELCOME15', discount: 15, expiresOn: '2026-10-20', status: 'active' }
+  ]);
+
+  const addCoupon = (e) => {
+    e.preventDefault();
+    if (!form.code || !form.discount) return;
+    setCoupons(c => [{ ...form, status: 'active' }, ...c]);
+    setForm({ code: '', discount: '', expiresOn: '' });
+  };
+
+  return (
+    <div>
+      <h2>Coupons</h2>
+      <form className="sd-form" onSubmit={addCoupon} style={{ marginBottom: '1.5rem' }}>
         <div className="form-row">
-          <div className="form-group"><label>Name</label><input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
-          <div className="form-group"><label>Image URL</label><input value={form.image} onChange={e => setForm(f => ({ ...f, image: e.target.value }))} /></div>
+          <div className="form-group"><label>Coupon Code</label><input required value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} /></div>
+          <div className="form-group"><label>Discount (%)</label><input required type="number" value={form.discount} onChange={e => setForm(f => ({ ...f, discount: e.target.value }))} /></div>
+          <div className="form-group"><label>Expiry Date</label><input type="date" value={form.expiresOn} onChange={e => setForm(f => ({ ...f, expiresOn: e.target.value }))} /></div>
         </div>
-        <div className="form-group"><label>Description</label><input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
-        <button type="submit" className="btn btn-primary">Add Category</button>
+        <button type="submit" className="btn btn-primary">Create Coupon</button>
       </form>
       <div className="sd-table-wrap"><table className="sd-table">
-        <thead><tr><th>Name</th><th>Slug</th><th>Actions</th></tr></thead>
-        <tbody>{cats.map(c => (<tr key={c._id}><td>{c.name}</td><td>{c.slug}</td><td><button className="sd-action-btn danger" onClick={() => deleteCat(c._id)}>Delete</button></td></tr>))}</tbody>
+        <thead><tr><th>Code</th><th>Discount</th><th>Expires On</th><th>Status</th></tr></thead>
+        <tbody>{coupons.map((c, idx) => (
+          <tr key={idx}><td>{c.code}</td><td>{c.discount}%</td><td>{c.expiresOn || 'N/A'}</td><td><span className="sd-badge approved">{c.status}</span></td></tr>
+        ))}</tbody>
       </table></div>
     </div>
   );
@@ -167,32 +198,6 @@ function Payments() {
   );
 }
 
-/* ── Tickets ── */
-function Tickets() {
-  const [tickets, setTickets] = useState([]);
-  useEffect(() => { api.get('/admin/tickets').then(r => setTickets(r.data)).catch(() => {}); }, []);
-  const updateStatus = async (id, status) => { try { await api.put(`/admin/tickets/${id}`, { status }); setTickets(t => t.map(x => x._id === id ? { ...x, status } : x)); } catch {} };
-  return (
-    <div>
-      <h2>Support Tickets ({tickets.length})</h2>
-      {tickets.length === 0 ? <p className="no-data">No tickets</p> : (
-        <div className="sd-table-wrap"><table className="sd-table">
-          <thead><tr><th>Subject</th><th>User</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-          <tbody>{tickets.map(t => (
-            <tr key={t._id}><td>{t.subject}</td><td>{t.name || t.email}</td>
-              <td><span className={`sd-badge ${t.status === 'open' ? 'pending' : t.status === 'resolved' ? 'approved' : ''}`}>{t.status}</span></td>
-              <td>{new Date(t.createdAt).toLocaleDateString()}</td>
-              <td><select value={t.status} onChange={e => updateStatus(t._id, e.target.value)}>
-                {['open','in_progress','resolved','closed'].map(s => <option key={s} value={s}>{s}</option>)}
-              </select></td>
-            </tr>
-          ))}</tbody>
-        </table></div>
-      )}
-    </div>
-  );
-}
-
 /* ── Reports ── */
 function Reports() {
   const [reports, setReports] = useState(null);
@@ -229,6 +234,28 @@ function Reports() {
   );
 }
 
+function AdminSettings() {
+  const [form, setForm] = useState({ storeName: 'ShopKart', supportEmail: 'support@shopkart.com', autoApproveSellers: false });
+  const [saved, setSaved] = useState(false);
+  return (
+    <div>
+      <h2>Settings</h2>
+      {saved && <div className="profile-success">Settings updated.</div>}
+      <form className="sd-form" onSubmit={(e) => { e.preventDefault(); setSaved(true); setTimeout(() => setSaved(false), 2500); }}>
+        <div className="form-group"><label>Store Name</label><input value={form.storeName} onChange={e => setForm(f => ({ ...f, storeName: e.target.value }))} /></div>
+        <div className="form-group"><label>Support Email</label><input value={form.supportEmail} onChange={e => setForm(f => ({ ...f, supportEmail: e.target.value }))} /></div>
+        <div className="form-group">
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <input type="checkbox" checked={form.autoApproveSellers} onChange={e => setForm(f => ({ ...f, autoApproveSellers: e.target.checked }))} />
+            Auto approve new sellers
+          </label>
+        </div>
+        <button className="btn btn-primary" type="submit">Save Settings</button>
+      </form>
+    </div>
+  );
+}
+
 /* ── Main Admin Shell ── */
 export default function AdminDashboard() {
   const { admin, logoutAdmin } = useAuth();
@@ -237,15 +264,16 @@ export default function AdminDashboard() {
   const path = location.pathname;
 
   const links = [
-    { to: '/admin/dashboard', label: 'Overview', icon: '📊' },
+    { to: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
     { to: '/admin/users', label: 'Users', icon: '👥' },
     { to: '/admin/sellers', label: 'Sellers', icon: '🏪' },
     { to: '/admin/products', label: 'Products', icon: '📦' },
-    { to: '/admin/categories', label: 'Categories', icon: '📁' },
     { to: '/admin/orders', label: 'Orders', icon: '🛒' },
     { to: '/admin/payments', label: 'Payments', icon: '💳' },
-    { to: '/admin/reports', label: 'Reports', icon: '📈' },
-    { to: '/admin/tickets', label: 'Tickets', icon: '🎫' },
+    { to: '/admin/reviews', label: 'Reviews', icon: '⭐' },
+    { to: '/admin/analytics', label: 'Analytics', icon: '📈' },
+    { to: '/admin/coupons', label: 'Coupons', icon: '🏷️' },
+    { to: '/admin/settings', label: 'Settings', icon: '⚙️' },
   ];
 
   return (
@@ -273,11 +301,12 @@ export default function AdminDashboard() {
           <Route path="users" element={<Users />} />
           <Route path="sellers" element={<Sellers />} />
           <Route path="products" element={<AdminProducts />} />
-          <Route path="categories" element={<Categories />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="payments" element={<Payments />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="tickets" element={<Tickets />} />
+          <Route path="reviews" element={<AdminReviews />} />
+          <Route path="analytics" element={<Reports />} />
+          <Route path="coupons" element={<Coupons />} />
+          <Route path="settings" element={<AdminSettings />} />
           <Route path="*" element={<Overview />} />
         </Routes>
       </main>

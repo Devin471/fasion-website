@@ -70,23 +70,60 @@ function Products() {
 function AddProduct() {
   const navigate = useNavigate();
   const [cats, setCats] = useState([]);
-  const [form, setForm] = useState({ name: '', description: '', price: '', originalPrice: '', category: '', brand: '', stock: '', images: '', sizes: '', colors: '', tags: '' });
+  const [form, setForm] = useState({ name: '', description: '', price: '', originalPrice: '', category: '', brand: '', stock: '', sizes: '', colors: '', tags: '' });
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const requiredCategoryNames = ['Men', 'Women', 'Kids'];
+
+  const getOrderedCategories = () => {
+    const byName = (name) => cats.find((c) => c.name?.toLowerCase() === name.toLowerCase());
+    const required = requiredCategoryNames.map((name) => byName(name)).filter(Boolean);
+    const rest = cats.filter((c) => !required.some((r) => r._id === c._id));
+    return [...required, ...rest];
+  };
+
+  const missingRequired = requiredCategoryNames.filter((name) => !cats.some((c) => c.name?.toLowerCase() === name.toLowerCase()));
 
   useEffect(() => { api.get('/categories').then(r => setCats(r.data)).catch(() => {}); }, []);
 
+  const handleImageSelect = (e) => {
+    const files = Array.from(e.target.files || []);
+    setImageFiles(files);
+    setImagePreviews(files.map((f) => URL.createObjectURL(f)));
+  };
+
+  const uploadImages = async () => {
+    if (!imageFiles.length) return [];
+    const fd = new FormData();
+    imageFiles.forEach((file) => fd.append('images', file));
+    const { data } = await api.post('/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    const serverBase = api.defaults.baseURL.replace('/api', '');
+    return (data.urls || []).map((url) => `${serverBase}${url}`);
+  };
+
   const handleSubmit = async e => {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    setError('');
+    if (!imageFiles.length) {
+      setError('Please upload at least one product image');
+      return;
+    }
+    setLoading(true);
     try {
+      const uploadedImages = await uploadImages();
       const payload = { ...form, price: +form.price, originalPrice: +form.originalPrice || +form.price, stock: +form.stock,
-        images: form.images.split(',').map(s => s.trim()).filter(Boolean),
+        images: uploadedImages,
         sizes: form.sizes.split(',').map(s => s.trim()).filter(Boolean),
         colors: form.colors.split(',').map(s => s.trim()).filter(Boolean),
         tags: form.tags.split(',').map(s => s.trim()).filter(Boolean),
       };
       await api.post('/products', payload);
       navigate('/seller/products');
-    } catch {}
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to add product');
+    }
     setLoading(false);
   };
 
@@ -94,14 +131,30 @@ function AddProduct() {
     <div>
       <h2>Add New Product</h2>
       <form className="sd-form" onSubmit={handleSubmit}>
+        {error && <div className="auth-error" style={{ marginBottom: '1rem' }}>{error}</div>}
         <div className="form-row"><div className="form-group"><label>Product Name</label><input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
           <div className="form-group"><label>Brand</label><input value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} /></div></div>
         <div className="form-group"><label>Description</label><textarea rows={3} required value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /></div>
         <div className="form-row"><div className="form-group"><label>Price (₹)</label><input type="number" required value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} /></div>
           <div className="form-group"><label>Original Price</label><input type="number" value={form.originalPrice} onChange={e => setForm(f => ({ ...f, originalPrice: e.target.value }))} /></div>
           <div className="form-group"><label>Stock</label><input type="number" required value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} /></div></div>
-        <div className="form-group"><label>Category</label><select required value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}><option value="">Select</option>{cats.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}</select></div>
-        <div className="form-group"><label>Image URLs (comma separated)</label><input value={form.images} onChange={e => setForm(f => ({ ...f, images: e.target.value }))} placeholder="https://..." /></div>
+        <div className="form-group">
+          <label>Category</label>
+          <select required value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
+            <option value="">Select</option>
+            {getOrderedCategories().map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+            {missingRequired.map((name) => <option key={`missing-${name}`} value="" disabled>{name} (ask admin to create)</option>)}
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Upload Product Images</label>
+          <input type="file" multiple accept="image/*" onChange={handleImageSelect} />
+          {imagePreviews.length > 0 && (
+            <div className="sd-image-previews">
+              {imagePreviews.map((src, idx) => <img key={idx} src={src} alt={`Preview ${idx + 1}`} />)}
+            </div>
+          )}
+        </div>
         <div className="form-row"><div className="form-group"><label>Sizes</label><input placeholder="S, M, L, XL" value={form.sizes} onChange={e => setForm(f => ({ ...f, sizes: e.target.value }))} /></div>
           <div className="form-group"><label>Colors</label><input placeholder="Red, Blue" value={form.colors} onChange={e => setForm(f => ({ ...f, colors: e.target.value }))} /></div></div>
         <div className="form-group"><label>Tags</label><input placeholder="trending, new" value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} /></div>
@@ -117,6 +170,16 @@ function EditProduct() {
   const [cats, setCats] = useState([]);
   const [form, setForm] = useState(null);
   const [loading, setLoading] = useState(false);
+  const requiredCategoryNames = ['Men', 'Women', 'Kids'];
+
+  const getOrderedCategories = () => {
+    const byName = (name) => cats.find((c) => c.name?.toLowerCase() === name.toLowerCase());
+    const required = requiredCategoryNames.map((name) => byName(name)).filter(Boolean);
+    const rest = cats.filter((c) => !required.some((r) => r._id === c._id));
+    return [...required, ...rest];
+  };
+
+  const missingRequired = requiredCategoryNames.filter((name) => !cats.some((c) => c.name?.toLowerCase() === name.toLowerCase()));
 
   useEffect(() => {
     Promise.all([api.get(`/products/${id}`), api.get('/categories')]).then(([pr, cr]) => {
@@ -152,7 +215,14 @@ function EditProduct() {
         <div className="form-row"><div className="form-group"><label>Price</label><input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} /></div>
           <div className="form-group"><label>Original Price</label><input type="number" value={form.originalPrice} onChange={e => setForm(f => ({ ...f, originalPrice: e.target.value }))} /></div>
           <div className="form-group"><label>Stock</label><input type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} /></div></div>
-        <div className="form-group"><label>Category</label><select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}><option value="">Select</option>{cats.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}</select></div>
+        <div className="form-group">
+          <label>Category</label>
+          <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
+            <option value="">Select</option>
+            {getOrderedCategories().map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+            {missingRequired.map((name) => <option key={`missing-${name}`} value="" disabled>{name} (ask admin to create)</option>)}
+          </select>
+        </div>
         <div className="form-group"><label>Images</label><input value={form.images} onChange={e => setForm(f => ({ ...f, images: e.target.value }))} /></div>
         <div className="form-row"><div className="form-group"><label>Sizes</label><input value={form.sizes} onChange={e => setForm(f => ({ ...f, sizes: e.target.value }))} /></div>
           <div className="form-group"><label>Colors</label><input value={form.colors} onChange={e => setForm(f => ({ ...f, colors: e.target.value }))} /></div></div>
@@ -191,6 +261,56 @@ function Orders() {
   );
 }
 
+function Inventory() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => { api.get('/seller/products').then(r => setProducts(r.data)).catch(() => {}); }, []);
+  const lowStock = products.filter(p => (p.stock || 0) < 8);
+  return (
+    <div>
+      <h2>Inventory</h2>
+      <div className="sd-stats-grid">
+        <div className="sd-stat-card"><span className="sd-stat-icon">📦</span><div><p className="sd-stat-val">{products.length}</p><p className="sd-stat-label">Total SKUs</p></div></div>
+        <div className="sd-stat-card"><span className="sd-stat-icon">⚠️</span><div><p className="sd-stat-val">{lowStock.length}</p><p className="sd-stat-label">Low Stock</p></div></div>
+      </div>
+      <div className="sd-table-wrap"><table className="sd-table">
+        <thead><tr><th>Product</th><th>Stock</th><th>Status</th></tr></thead>
+        <tbody>{products.map(p => (
+          <tr key={p._id}>
+            <td><div className="sd-product-cell"><img src={p.images?.[0] || 'https://via.placeholder.com/40'} alt="" /><span>{p.name}</span></div></td>
+            <td>{p.stock || 0}</td>
+            <td><span className={`sd-badge ${(p.stock || 0) < 8 ? 'pending' : 'approved'}`}>{(p.stock || 0) < 8 ? 'Restock Soon' : 'Healthy'}</span></td>
+          </tr>
+        ))}</tbody>
+      </table></div>
+    </div>
+  );
+}
+
+function Customers() {
+  const [orders, setOrders] = useState([]);
+  useEffect(() => { api.get('/orders/seller/list').then(r => setOrders(r.data)).catch(() => {}); }, []);
+  const customerMap = orders.reduce((acc, o) => {
+    const key = o.user?._id || o.user?.email || 'unknown';
+    if (!acc[key]) acc[key] = { name: o.user?.name || 'Guest', email: o.user?.email || 'N/A', count: 0, spent: 0 };
+    acc[key].count += 1;
+    acc[key].spent += o.totalAmount || 0;
+    return acc;
+  }, {});
+  const customers = Object.values(customerMap);
+
+  return (
+    <div>
+      <h2>Customers</h2>
+      <div className="sd-table-wrap"><table className="sd-table">
+        <thead><tr><th>Customer</th><th>Email</th><th>Orders</th><th>Total Purchase</th></tr></thead>
+        <tbody>{customers.map((c, idx) => (
+          <tr key={idx}><td>{c.name}</td><td>{c.email}</td><td>{c.count}</td><td>₹{c.spent.toLocaleString()}</td></tr>
+        ))}</tbody>
+      </table></div>
+    </div>
+  );
+}
+
 function Analytics() {
   const [data, setData] = useState(null);
   useEffect(() => { api.get('/seller/analytics').then(r => setData(r.data)).catch(() => {}); }, []);
@@ -208,22 +328,27 @@ function Analytics() {
   );
 }
 
-function Reviews() {
-  const [reviews, setReviews] = useState([]);
-  useEffect(() => { api.get('/seller/reviews').then(r => setReviews(r.data)).catch(() => {}); }, []);
+function Earnings() {
+  const [data, setData] = useState(null);
+  useEffect(() => { api.get('/seller/analytics').then(r => setData(r.data)).catch(() => {}); }, []);
+  if (!data) return <div className="loading-spinner"><div className="spinner"></div></div>;
+
+  const totalRevenue = (data.monthly || []).reduce((sum, month) => sum + (month.revenue || 0), 0);
+  const totalOrders = (data.monthly || []).reduce((sum, month) => sum + (month.orders || 0), 0);
+
   return (
     <div>
-      <h2>Customer Reviews</h2>
-      {reviews.length === 0 ? <p className="no-data">No reviews yet</p> : (
-        <div className="sd-reviews">{reviews.map(r => (
-          <div className="review-card" key={r._id}>
-            <div className="review-top"><span className="review-stars">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span><span className="review-author">{r.user?.name}</span></div>
-            {r.title && <h5>{r.title}</h5>}
-            <p>{r.comment}</p>
-            <p className="review-product">Product: {r.product?.name}</p>
-          </div>
-        ))}</div>
-      )}
+      <h2>Earnings</h2>
+      <div className="sd-stats-grid">
+        <div className="sd-stat-card"><span className="sd-stat-icon">💰</span><div><p className="sd-stat-val">₹{totalRevenue.toLocaleString()}</p><p className="sd-stat-label">Total Earnings</p></div></div>
+        <div className="sd-stat-card"><span className="sd-stat-icon">🛒</span><div><p className="sd-stat-val">{totalOrders}</p><p className="sd-stat-label">Total Orders</p></div></div>
+      </div>
+      <div className="sd-table-wrap"><table className="sd-table">
+        <thead><tr><th>Month</th><th>Orders</th><th>Revenue</th></tr></thead>
+        <tbody>{(data.monthly || []).map((m) => (
+          <tr key={m.month}><td>{m.month}</td><td>{m.orders}</td><td>₹{(m.revenue || 0).toLocaleString()}</td></tr>
+        ))}</tbody>
+      </table></div>
     </div>
   );
 }
@@ -262,12 +387,14 @@ export default function SellerDashboard() {
   const path = location.pathname;
 
   const links = [
-    { to: '/seller/dashboard', label: 'Overview', icon: '📊' },
-    { to: '/seller/products', label: 'Products', icon: '📦' },
+    { to: '/seller/dashboard', label: 'Dashboard', icon: '📊' },
+    { to: '/seller/products', label: 'My Products', icon: '📦' },
     { to: '/seller/add-product', label: 'Add Product', icon: '➕' },
     { to: '/seller/orders', label: 'Orders', icon: '🛒' },
+    { to: '/seller/inventory', label: 'Inventory', icon: '📚' },
+    { to: '/seller/customers', label: 'Customers', icon: '👥' },
     { to: '/seller/analytics', label: 'Analytics', icon: '📈' },
-    { to: '/seller/reviews', label: 'Reviews', icon: '⭐' },
+    { to: '/seller/earnings', label: 'Earnings', icon: '💵' },
     { to: '/seller/settings', label: 'Settings', icon: '⚙️' },
   ];
 
@@ -297,8 +424,10 @@ export default function SellerDashboard() {
           <Route path="add-product" element={<AddProduct />} />
           <Route path="edit-product/:id" element={<EditProduct />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="customers" element={<Customers />} />
           <Route path="analytics" element={<Analytics />} />
-          <Route path="reviews" element={<Reviews />} />
+          <Route path="earnings" element={<Earnings />} />
           <Route path="settings" element={<Settings />} />
           <Route path="*" element={<Overview />} />
         </Routes>

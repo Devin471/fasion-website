@@ -1,13 +1,91 @@
-/* ─── Footer CSS — Golden Luxury ───────────────────── */
-.footer { background:#0a0908; border-top:1px solid rgba(212,168,67,.12); margin-top:auto; }
-.footer-top { padding:3rem 0 2rem; }
-.footer-container { max-width:1400px; margin:0 auto; padding:0 1.5rem; display:grid; grid-template-columns:1.5fr repeat(4,1fr); gap:2rem; }
-.footer-col h3 { font-size:1.2rem; color:#fff; margin-bottom:.8rem; letter-spacing:1px; }
-.footer-col h4 { color:var(--gold); font-size:.9rem; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:1rem; font-weight:600; }
-.footer-col p { color:rgba(255,255,255,.45); font-size:.85rem; line-height:1.7; }
-.footer-col a { display:block; color:rgba(255,255,255,.5); text-decoration:none; font-size:.85rem; padding:.25rem 0; transition:all .3s; }
-.footer-col a:hover { color:var(--gold); padding-left:4px; }
-.footer-bottom { text-align:center; padding:1.2rem 0; border-top:1px solid rgba(255,255,255,.06); }
-.footer-bottom p { color:rgba(255,255,255,.3); font-size:.8rem; }
-@media(max-width:768px) { .footer-container { grid-template-columns:1fr 1fr; } }
-@media(max-width:480px) { .footer-container { grid-template-columns:1fr; } }
+.footer {
+	margin-top: auto;
+	background: #ffffff;
+	border-top: 1px solid var(--line);
+}
+
+.footer-top { padding: 2.7rem 0 1.7rem; }
+
+.footer-container {
+	max-width: 1320px;
+	margin: 0 auto;
+	padding: 0 1.5rem;
+	display: grid;
+	grid-template-columns: 1.5fr repeat(4, 1fr);
+	gap: 1.35rem;
+}
+
+.footer-col h3 {
+	font-size: 1.3rem;
+	color: var(--text);
+	margin-bottom: 0.7rem;
+	letter-spacing: 0.06em;
+}
+
+.footer-col h4 {
+	color: var(--coral);
+	font-size: 0.76rem;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	margin-bottom: 0.88rem;
+	font-weight: 800;
+}
+
+.footer-col p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; }
+
+.footer-col a {
+	display: block;
+	color: var(--text-muted);
+	text-decoration: none;
+	font-size: 0.85rem;
+	padding: 0.24rem 0;
+}
+
+.footer-col a:hover {
+	color: var(--coral);
+	transform: translateX(4px);
+}
+
+.footer-socials {
+	margin-top: 0.92rem;
+	display: flex;
+	gap: 0.5rem;
+}
+
+.footer-socials a {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	border: 1px solid var(--line-strong);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.7rem;
+	font-weight: 700;
+	color: var(--text);
+	background: rgba(31, 41, 55, 0.06);
+}
+
+.footer-socials a:hover {
+	border-color: rgba(255, 111, 97, 0.55);
+	background: rgba(255, 111, 97, 0.18);
+	color: #ffffff;
+}
+
+.footer-mini-note { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-dim); }
+
+.footer-bottom {
+	text-align: center;
+	padding: 1rem 0;
+	border-top: 1px solid var(--line);
+}
+
+.footer-bottom p { color: var(--text-dim); font-size: 0.8rem; }
+
+@media (max-width: 980px) {
+	.footer-container { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+	.footer-container { grid-template-columns: 1fr; padding-left: 1rem; padding-right: 1rem; }
+}

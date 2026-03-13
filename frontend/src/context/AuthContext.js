@@ -1,26 +1,20 @@
 /* ─── Auth Context — 3 role auth ───────────────────── */
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import api from '../utils/api';
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [customer, setCustomer] = useState(null);
-  const [customerToken, setCustomerToken] = useState(localStorage.getItem('customerToken'));
-  const [seller, setSeller] = useState(null);
-  const [sellerToken, setSellerToken] = useState(localStorage.getItem('sellerToken'));
-  const [admin, setAdmin] = useState(null);
-  const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
-  const [loading, setLoading] = useState(true);
+function safeParse(key) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch { return null; }
+}
 
-  useEffect(() => {
-    try {
-      const sc = localStorage.getItem('customer'); if (sc) setCustomer(JSON.parse(sc));
-      const ss = localStorage.getItem('seller');   if (ss) setSeller(JSON.parse(ss));
-      const sa = localStorage.getItem('admin');    if (sa) setAdmin(JSON.parse(sa));
-    } catch {}
-    setLoading(false);
-  }, []);
+export function AuthProvider({ children }) {
+  const [customer, setCustomer] = useState(() => safeParse('customer'));
+  const [customerToken, setCustomerToken] = useState(() => localStorage.getItem('customerToken'));
+  const [seller, setSeller] = useState(() => safeParse('seller'));
+  const [sellerToken, setSellerToken] = useState(() => localStorage.getItem('sellerToken'));
+  const [admin, setAdmin] = useState(() => safeParse('admin'));
+  const [adminToken, setAdminToken] = useState(() => localStorage.getItem('adminToken'));
 
   /* ── Customer ── */
   const loginCustomer = async (email, password) => {
@@ -32,6 +26,13 @@ export function AuthProvider({ children }) {
   };
   const registerCustomer = async (name, email, password, phone) => {
     const { data } = await api.post('/auth/register', { name, email, password, phone });
+    localStorage.setItem('customerToken', data.token);
+    localStorage.setItem('customer', JSON.stringify(data.user));
+    setCustomerToken(data.token); setCustomer(data.user);
+    return data.user;
+  };
+  const loginCustomerWithGoogle = async (accessToken) => {
+    const { data } = await api.post('/auth/google', { accessToken, role: 'customer' });
     localStorage.setItem('customerToken', data.token);
     localStorage.setItem('customer', JSON.stringify(data.user));
     setCustomerToken(data.token); setCustomer(data.user);
@@ -52,6 +53,13 @@ export function AuthProvider({ children }) {
   };
   const registerSeller = async (payload) => {
     const { data } = await api.post('/auth/seller/register', payload);
+    localStorage.setItem('sellerToken', data.token);
+    localStorage.setItem('seller', JSON.stringify(data.seller));
+    setSellerToken(data.token); setSeller(data.seller);
+    return data.seller;
+  };
+  const loginSellerWithGoogle = async (accessToken) => {
+    const { data } = await api.post('/auth/google', { accessToken, role: 'seller' });
     localStorage.setItem('sellerToken', data.token);
     localStorage.setItem('seller', JSON.stringify(data.seller));
     setSellerToken(data.token); setSeller(data.seller);
@@ -83,14 +91,14 @@ export function AuthProvider({ children }) {
   };
 
   const value = {
-    customer, seller, admin, loading,
+    customer, seller, admin,
     isCustomer: !!customerToken, isSeller: !!sellerToken, isAdmin: !!adminToken,
-    loginCustomer, registerCustomer, logoutCustomer,
-    loginSeller, registerSeller, logoutSeller,
+    loginCustomer, registerCustomer, loginCustomerWithGoogle, logoutCustomer,
+    loginSeller, registerSeller, loginSellerWithGoogle, logoutSeller,
     loginAdmin, registerAdmin, logoutAdmin
   };
 
-  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);

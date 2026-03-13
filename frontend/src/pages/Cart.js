@@ -16,7 +16,9 @@ export default function Cart() {
     return s + price * (i.quantity || 1);
   }, 0);
   const shipping = subtotal > 999 ? 0 : 99;
+  const discount = subtotal > 2999 ? Math.round(subtotal * 0.1) : 0;
   const total = subtotal + shipping;
+  const payable = total - discount;
 
   if (items.length === 0) {
     return (
@@ -32,7 +34,16 @@ export default function Cart() {
 
   return (
     <div className="cart-page">
-      <h1>Shopping <span className="gold">Cart</span> ({cartCount})</h1>
+      <div className="cart-head">
+        <h1>Shopping Cart ({cartCount})</h1>
+        <div className="checkout-steps" aria-label="Checkout progress">
+          <span className="step active">Cart</span>
+          <span className="step-divider"></span>
+          <span className="step">Details</span>
+          <span className="step-divider"></span>
+          <span className="step">Payment</span>
+        </div>
+      </div>
       <div className="cart-layout">
         <div className="cart-items">
           {items.map((item, idx) => {
@@ -55,17 +66,27 @@ export default function Cart() {
               </div>
             );
           })}
-          <button className="btn btn-outline" onClick={clearCart}>Clear Cart</button>
+          <div className="cart-bottom-actions">
+            <button className="btn btn-outline" onClick={clearCart}>Clear Cart</button>
+            <div className="promo-box">
+              <label htmlFor="promo">Promo code</label>
+              <div className="promo-input">
+                <input id="promo" type="text" placeholder="STYLE10" />
+                <button type="button">Apply</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="cart-summary">
           <h3>Order Summary</h3>
           <div className="cs-row"><span>Subtotal</span><span>₹{subtotal.toLocaleString()}</span></div>
           <div className="cs-row"><span>Shipping</span><span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span></div>
+          <div className="cs-row"><span>Discount</span><span>-₹{discount.toLocaleString()}</span></div>
           <hr />
-          <div className="cs-row cs-total"><span>Total</span><span>₹{total.toLocaleString()}</span></div>
+          <div className="cs-row cs-total"><span>Total</span><span>₹{payable.toLocaleString()}</span></div>
           {shipping > 0 && <p className="cs-hint">Add ₹{(999 - subtotal).toLocaleString()} more for free shipping</p>}
-          <button className="btn btn-primary btn-full" onClick={() => isCustomer ? navigate('/checkout') : navigate('/login')}>
+          <button className="btn btn-primary btn-full checkout-btn" onClick={() => isCustomer ? navigate('/checkout') : navigate('/login')}>
             {isCustomer ? 'Proceed to Checkout' : 'Login to Checkout'}
           </button>
           <Link to="/shop" className="cs-continue">← Continue Shopping</Link>

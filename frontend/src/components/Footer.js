@@ -13,7 +13,13 @@ export default function Footer() {
         <div className="footer-container">
           <div className="footer-col">
             <h3><span className="logo-icon">♦</span> SHOP<span className="logo-gold">KART</span></h3>
-            <p>Your premium multi-vendor marketplace. Discover luxury products from verified sellers worldwide.</p>
+            <p>Your modern fashion marketplace for curated edits, trend drops, and premium everyday style.</p>
+            <div className="footer-socials">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">FB</a>
+              <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="X">X</a>
+              <a href="https://pinterest.com" target="_blank" rel="noreferrer" aria-label="Pinterest">PT</a>
+            </div>
           </div>
           <div className="footer-col">
             <h4>Shop</h4>
@@ -41,6 +47,7 @@ export default function Footer() {
             <h4>Sell With Us</h4>
             <Link to="/seller/register">Become a Seller</Link>
             <Link to="/seller/login">Seller Login</Link>
+            <p className="footer-mini-note">Download our app for quick product discovery and flash sale alerts.</p>
           </div>
         </div>
       </div>
