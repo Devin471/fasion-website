@@ -8,13 +8,22 @@ const path = require('path');
 const connectDB = require('./config/db');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Use Render's provided PORT or default to 5000
 
 /* ── Connect MongoDB ── */
 connectDB();
 
 /* ── Middleware ── */
-app.use(cors());
+// Enable CORS for all origins (customize origin as needed for Netlify frontend)
+app.use(cors({
+   origin: '*', // Replace '*' with your Netlify frontend URL for stricter security
+   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+   credentials: true
+}));
+/* ── Root Route ── */
+app.get('/', (req, res) => {
+   res.send('Backend is running successfully');
+});
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
