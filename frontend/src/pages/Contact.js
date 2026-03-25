@@ -12,7 +12,7 @@ export default function Contact() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post('/users/tickets', form);
+      await api.post('/api/users/tickets', form);
       setSent(true);
     } catch {}
     setLoading(false);
@@ -30,7 +30,7 @@ export default function Contact() {
         <div className="contact-info">
           {[
             { icon: '📍', title: 'Address', text: '123 Commerce Street, Mumbai 400001' },
-            { icon: '📧', title: 'Email', text: 'support@shopkart.com' },
+            { icon: '📧', title: 'Email', text: 'support@myfashion.com' },
             { icon: '📞', title: 'Phone', text: '+91 1800-123-4567' },
             { icon: '⏰', title: 'Hours', text: 'Mon-Sat: 9AM - 8PM IST' },
           ].map((item, i) => (

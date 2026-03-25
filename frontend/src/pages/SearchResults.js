@@ -15,7 +15,7 @@ export default function SearchResults() {
     if (!q) { setProducts([]); setLoading(false); return; }
     (async () => {
       setLoading(true);
-      try { const { data } = await api.get(`/products?search=${encodeURIComponent(q)}`); setProducts(data.products || data); }
+      try { const { data } = await api.get(`/api/products?search=${encodeURIComponent(q)}`); setProducts(data.products || data); }
       catch {}
       setLoading(false);
     })();

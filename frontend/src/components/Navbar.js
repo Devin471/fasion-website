@@ -14,15 +14,33 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdown, setDropdown] = useState(false);
-  const dropRef = useRef();
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 820);
 
   useEffect(() => {
-    const h = e => { if (dropRef.current && !dropRef.current.contains(e.target)) setDropdown(false); };
-    document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h);
+    const onResize = () => setIsMobile(window.innerWidth <= 820);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const handleSearch = e => { e.preventDefault(); if (query.trim()) { navigate(`/search?q=${encodeURIComponent(query.trim())}`); setQuery(''); } };
+  const handleSearch = e => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+      setQuery('');
+      setMenuOpen(false);
+      setShowMobileSearch(false);
+    }
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(prev => !prev);
+    setShowMobileSearch(false);
+  };
+
+  const handleProfileClick = () => {
+    toggleMenu();
+  };
 
   /* hide navbar on seller/admin dashboards */
   const path = window.location.pathname;
@@ -32,9 +50,8 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          <span className="logo-icon">♦</span>
-          <img src="/logo-mf.svg" alt="MF Logo" className="logo-icon" style={{width:'2rem',height:'2rem',marginRight:'0.3rem'}} />
-          <span className="logo-text">MY<span className="logo-gold">FASION</span></span>
+          <img src="/logo-mf-luxury.svg" alt="MF Logo" className="logo-icon" style={{width:'2rem',height:'2rem',marginRight:'0.3rem'}} />
+          <span className="logo-text">My<span className="logo-gold">Fashion</span></span>
         </Link>
 
         <div className="nav-links-main">
@@ -51,6 +68,9 @@ export default function Navbar() {
         </form>
 
         <div className="nav-actions">
+          <button className="nav-search-toggle" onClick={() => setShowMobileSearch(s => !s)} aria-label="Toggle search">
+            ⌕
+          </button>
           {isAdmin ? (
             <>
               <Link to="/admin/dashboard" className="nav-link">Dashboard</Link>
@@ -72,47 +92,45 @@ export default function Navbar() {
                 {cartCount > 0 && <span className="nav-badge">{cartCount}</span>}
               </Link>
               {isCustomer ? (
-                <div className="nav-dropdown" ref={dropRef}>
-                  <button className="nav-user-btn" onClick={() => setDropdown(!dropdown)}>
+                <div className="nav-dropdown">
+                  <button className="nav-user-btn" onClick={handleProfileClick}>
                     <span className="nav-avatar">{customer?.name?.[0]?.toUpperCase() || 'U'}</span>
                     <span className="nav-username">{customer?.name?.split(' ')[0]}</span>
                   </button>
-                  {dropdown && (
-                    <div className="dropdown-menu">
-                      <Link to="/profile" onClick={() => setDropdown(false)}>My Profile</Link>
-                      <Link to="/orders" onClick={() => setDropdown(false)}>My Orders</Link>
-                      <Link to="/wishlist" onClick={() => setDropdown(false)}>My Wishlist</Link>
-                      <hr />
-                      <button onClick={() => { logoutCustomer(); setDropdown(false); navigate('/'); }}>Logout</button>
-                    </div>
-                  )}
                 </div>
               ) : (
-                <Link to="/login" className="nav-login-btn">Login</Link>
+                <>
+                  <button className="nav-user-btn" onClick={toggleMenu} aria-label="Open menu">
+                    <span className="nav-avatar">U</span>
+                  </button>
+                  <Link to="/login" className="nav-login-btn">Login</Link>
+                </>
               )}
             </>
           )}
         </div>
-
-        <button className="nav-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? '✕' : '☰'}
-        </button>
       </div>
 
-      {menuOpen && (
-        <div className="nav-mobile-menu">
-          <form className="nav-search mobile" onSubmit={handleSearch}>
-            <input placeholder="Search..." value={query} onChange={e => setQuery(e.target.value)} />
+      {showMobileSearch && (
+        <div className="nav-search-popover">
+          <form className="nav-search" onSubmit={handleSearch}>
+            <input placeholder="Search for products, brands and more..." value={query} onChange={e => setQuery(e.target.value)} />
             <button type="submit">⌕</button>
           </form>
-          <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
-          <Link to="/shop" onClick={() => setMenuOpen(false)}>Shop</Link>
-          <Link to="/shop" onClick={() => setMenuOpen(false)}>Categories</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>About</Link>
-          <Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link>
-          {isCustomer && <Link to="/orders" onClick={() => setMenuOpen(false)}>Orders</Link>}
-          {isCustomer && <Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>}
-          {!isCustomer && !isSeller && !isAdmin && <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>}
+        </div>
+      )}
+
+      {menuOpen && (
+        <div className="nav-mobile-overlay" onClick={() => setMenuOpen(false)}>
+          <div className="nav-mobile-panel" onClick={e => e.stopPropagation()}>
+            <div className="nav-mobile-menu">
+              <Link to="/profile" onClick={() => setMenuOpen(false)}>My Profile</Link>
+              {isCustomer && <Link to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link>}
+              {isCustomer && <Link to="/wishlist" onClick={() => setMenuOpen(false)}>My Wishlist</Link>}
+              {isCustomer && <button className="nav-link" onClick={() => { logoutCustomer(); setMenuOpen(false); navigate('/'); }}>Logout</button>}
+              {!isCustomer && !isSeller && !isAdmin && <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>}
+            </div>
+          </div>
         </div>
       )}
     </nav>

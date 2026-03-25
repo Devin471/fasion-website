@@ -16,9 +16,9 @@ export default function Home() {
     (async () => {
       try {
         const [fp, cp, lp] = await Promise.all([
-          api.get('/products?featured=true&limit=8'),
-          api.get('/categories'),
-          api.get('/products?sort=newest&limit=8')
+          api.get('/api/products?featured=true&limit=8'),
+          api.get('/api/categories'),
+          api.get('/api/products?sort=newest&limit=8')
         ]);
         if (!cancelled) {
           setFeatured(fp.data.products || fp.data);

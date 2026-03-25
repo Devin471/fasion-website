@@ -1,7 +1,7 @@
 {
-  "name": "shopkart-backend",
+  "name": "myfashion-backend",
   "version": "2.0.0",
-  "description": "ShopKart Multi-Vendor E-Commerce API with MongoDB",
+  "description": "MyFashion Multi-Vendor E-Commerce API with MongoDB",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

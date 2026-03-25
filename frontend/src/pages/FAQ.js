@@ -4,7 +4,7 @@ import './FAQ.css';
 
 const faqs = [
   { q: 'How do I place an order?', a: 'Browse products, add them to cart, proceed to checkout, fill shipping details, select payment method and confirm your order.' },
-  { q: 'What payment methods do you accept?', a: 'We accept Cash on Delivery (COD), Credit/Debit Cards, UPI (GPay, PhonePe, Paytm), and ShopKart Wallet.' },
+  { q: 'What payment methods do you accept?', a: 'We accept Cash on Delivery (COD), Credit/Debit Cards, UPI (GPay, PhonePe, Paytm), and MyFashion Wallet.' },
   { q: 'How can I track my order?', a: 'Go to My Orders from your profile menu. You can see real-time status updates for all your orders.' },
   { q: 'What is the return policy?', a: 'We offer a 7-day easy return policy. If you\'re not satisfied, initiate a return from your order history.' },
   { q: 'How do I become a seller?', a: 'Click on "Start Selling" or navigate to the Seller Registration page. Fill in your business details and our team will review your application.' },

@@ -31,7 +31,7 @@ export default function SellerRegister() {
       <div className="auth-left">
         <div className="auth-left-content">
           <span className="auth-tag">✦ Start Selling</span>
-          <h1>Join <span className="gold">ShopKart</span> as a Seller</h1>
+          <h1>Join <span className="gold">MyFashion</span> as a Seller</h1>
           <p>Reach millions of customers and grow your business with our premium marketplace.</p>
           <div className="auth-features">
             <div className="auth-feature"><span>🌍</span>Nationwide reach</div>

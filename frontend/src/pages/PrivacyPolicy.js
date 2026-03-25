@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
         <section><h3>4. Data Security</h3><p>We implement industry-standard security measures including encryption, secure servers, and regular security audits to protect your information.</p></section>
         <section><h3>5. Your Rights</h3><p>You have the right to access, correct, or delete your personal data. You can manage your preferences from your account settings or contact our support team.</p></section>
         <section><h3>6. Cookies</h3><p>We use cookies to enhance your experience, remember preferences, and analyze site traffic. You can manage cookie settings through your browser.</p></section>
-        <section><h3>7. Contact Us</h3><p>For privacy-related inquiries, email us at privacy@shopkart.com or use our Contact page.</p></section>
+        <section><h3>7. Contact Us</h3><p>For privacy-related inquiries, email us at privacy@myfashion.com or use our Contact page.</p></section>
       </div>
     </div>
   );

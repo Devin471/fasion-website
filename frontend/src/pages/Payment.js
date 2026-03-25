@@ -23,7 +23,7 @@ export default function Payment() {
   const placeOrder = async () => {
     setProcessing(true);
     try {
-      const { data } = await api.post('/orders', {
+      const { data } = await api.post('/api/orders', {
         shippingAddress: address,
         paymentMethod: method,
       });
@@ -51,7 +51,7 @@ export default function Payment() {
               {address.fullName || 'Customer'} · {address.phone || 'No phone'}
             </p>
             <p className="payment-muted">
-              {address.address || 'Address not added'}, {address.city || ''} {address.state || ''} {address.zipCode || ''}
+              {address.line1 || 'Address not added'}{address.line2 ? `, ${address.line2}` : ''}, {address.city || ''} {address.state || ''} {address.pincode || ''}
             </p>
           </div>
 

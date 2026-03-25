@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="footer-top">
         <div className="footer-container">
           <div className="footer-col">
-            <h3><img src="/logo-mf.svg" alt="MF Logo" className="logo-icon" style={{width:'2rem',height:'2rem',marginRight:'0.3rem'}} /> MY<span className="logo-gold">FASION</span></h3>
+            <h3><img src="/logo-mf-luxury.svg" alt="MF Logo" className="logo-icon" style={{width:'2rem',height:'2rem',marginRight:'0.3rem'}} /> My<span className="logo-gold">Fashion</span></h3>
             <p>Your modern fashion marketplace for curated edits, trend drops, and premium everyday style.</p>
             <div className="footer-socials">
               <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
@@ -52,7 +52,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} MyFasion. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} MyFashion. All rights reserved.</p>
       </div>
     </footer>
   );

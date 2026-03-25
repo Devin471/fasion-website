@@ -21,7 +21,7 @@ export default function ProductDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const [pr, rv] = await Promise.all([api.get(`/products/${id}`), api.get(`/reviews/product/${id}`)]);
+        const [pr, rv] = await Promise.all([api.get(`/api/products/${id}`), api.get(`/api/reviews/product/${id}`)]);
         setProduct(pr.data);
         setReviews(rv.data);
       } catch {}
@@ -34,8 +34,8 @@ export default function ProductDetail() {
   const submitReview = async e => {
     e.preventDefault();
     try {
-      await api.post('/reviews', { productId: product._id, ...reviewForm });
-      const rv = await api.get(`/reviews/product/${id}`);
+      await api.post('/api/reviews', { productId: product._id, ...reviewForm });
+      const rv = await api.get(`/api/reviews/product/${id}`);
       setReviews(rv.data);
       setReviewForm({ rating: 5, title: '', comment: '' });
     } catch {}
@@ -94,7 +94,7 @@ export default function ProductDetail() {
 
           {product.seller && (
             <div className="pd-seller">
-              <span>Sold by: </span><strong>{product.seller.businessName || 'ShopKart Seller'}</strong>
+              <span>Sold by: </span><strong>{product.seller.businessName || 'MyFashion Seller'}</strong>
             </div>
           )}
         </div>

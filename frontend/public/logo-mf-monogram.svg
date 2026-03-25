@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-label="MF premium monogram">
+  <defs>
+    <linearGradient id="mTone" x1="16%" y1="10%" x2="84%" y2="90%">
+      <stop offset="0%" stop-color="#273243"/>
+      <stop offset="100%" stop-color="#1f2937"/>
+    </linearGradient>
+    <linearGradient id="fTone" x1="10%" y1="14%" x2="90%" y2="86%">
+      <stop offset="0%" stop-color="#ff6a3d"/>
+      <stop offset="100%" stop-color="#ff8c42"/>
+    </linearGradient>
+    <linearGradient id="splitTone" x1="40%" y1="24%" x2="64%" y2="60%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="50%" stop-color="#f57341"/>
+      <stop offset="100%" stop-color="#ff8c42"/>
+    </linearGradient>
+  </defs>
+
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter" transform="translate(0 6)">
+    <path d="M220 950V270L440 590L660 270V950" stroke="url(#mTone)" stroke-width="118"/>
+    <path d="M660 950V270H1040M660 590H910" stroke="url(#fTone)" stroke-width="118"/>
+  </g>
+
+  <path d="M520 248L688 280L438 760L286 716Z" fill="url(#splitTone)"/>
+
+  <g fill="url(#mTone)">
+    <path d="M170 250H300L262 298H132Z"/>
+    <path d="M600 250H728L690 298H562Z"/>
+    <path d="M170 950H300L262 994H132Z"/>
+    <path d="M600 950H728L690 994H562Z"/>
+  </g>
+
+  <g fill="url(#fTone)">
+    <path d="M650 250H796L752 298H606Z"/>
+    <path d="M930 250H1080L1036 298H886Z"/>
+    <path d="M820 572H946L904 620H778Z"/>
+    <path d="M650 950H796L752 994H606Z"/>
+  </g>
+</svg>

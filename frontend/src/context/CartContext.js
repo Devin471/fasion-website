@@ -12,7 +12,7 @@ export function CartProvider({ children }) {
 
   const fetchCart = useCallback(async () => {
     if (!isCustomer) { setCart(JSON.parse(localStorage.getItem('guestCart') || '{"items":[]}')); return; }
-    try { setLoading(true); const { data } = await api.get('/cart'); setCart(data); }
+    try { setLoading(true); const { data } = await api.get('/api/cart'); setCart(data); }
     catch {} finally { setLoading(false); }
   }, [isCustomer]);
 
@@ -27,22 +27,22 @@ export function CartProvider({ children }) {
       localStorage.setItem('guestCart', JSON.stringify(guest));
       setCart(guest); return;
     }
-    try { const { data } = await api.post('/cart', { productId, quantity }); setCart(data); } catch {}
+    try { const { data } = await api.post('/api/cart', { productId, quantity }); setCart(data); } catch {}
   };
 
   const updateQuantity = async (itemId, quantity) => {
     if (!isCustomer) return;
-    try { const { data } = await api.put(`/cart/${itemId}`, { quantity }); setCart(data); } catch {}
+    try { const { data } = await api.put(`/api/cart/${itemId}`, { quantity }); setCart(data); } catch {}
   };
 
   const removeItem = async (itemId) => {
     if (!isCustomer) { const g = { ...cart, items: cart.items.filter((_, i) => i.toString() !== itemId) }; localStorage.setItem('guestCart', JSON.stringify(g)); setCart(g); return; }
-    try { const { data } = await api.delete(`/cart/${itemId}`); setCart(data); } catch {}
+    try { const { data } = await api.delete(`/api/cart/${itemId}`); setCart(data); } catch {}
   };
 
   const clearCart = async () => {
     if (!isCustomer) { localStorage.removeItem('guestCart'); setCart({ items: [] }); return; }
-    try { await api.delete('/cart'); setCart({ items: [] }); } catch {}
+    try { await api.delete('/api/cart'); setCart({ items: [] }); } catch {}
   };
 
   const cartCount = cart.items?.reduce((s, i) => s + (i.quantity || 1), 0) || 0;

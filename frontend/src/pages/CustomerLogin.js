@@ -92,7 +92,7 @@ export default function CustomerLogin() {
             </div>
           </div>
           <div className="auth-forgot-wrap">
-            <a href="mailto:support@shopkart.com" className="auth-forgot">Forgot password?</a>
+            <a href="mailto:support@myfashion.com" className="auth-forgot">Forgot password?</a>
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>{loading ? 'Signing in...' : 'Sign In'}</button>
           <p className="auth-switch">Don't have an account? <Link to="/register">Create Account</Link></p>

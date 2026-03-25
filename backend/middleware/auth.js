@@ -4,7 +4,7 @@ const User = require('../models/User');
 const Seller = require('../models/Seller');
 const Admin = require('../models/Admin');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'shopkart-secret-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'myfashion-secret-2026';
 
 const generateToken = (id, role) => jwt.sign({ id, role }, JWT_SECRET, { expiresIn: '7d' });
 

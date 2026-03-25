@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   ShopKart — Multi-Vendor E-Commerce API Server
+   MyFashion — Multi-Vendor E-Commerce API Server
    ═══════════════════════════════════════════════════════ */
 require('dotenv').config();
 const express = require('express');
@@ -44,4 +44,4 @@ app.use('/api/upload',     require('./routes/upload'));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
 
 /* ── Start ── */
-app.listen(PORT, () => console.log(`🚀 ShopKart API running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 MyFashion API running on port ${PORT}`));

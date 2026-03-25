@@ -8,7 +8,7 @@ import './SellerDashboard.css';
 /* ── Overview ── */
 function Overview() {
   const [stats, setStats] = useState(null);
-  useEffect(() => { api.get('/admin/stats').then(r => setStats(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/admin/stats').then(r => setStats(r.data)).catch(() => {}); }, []);
   if (!stats) return <div className="loading-spinner"><div className="spinner"></div></div>;
   return (
     <div>
@@ -34,8 +34,8 @@ function Overview() {
 /* ── Users ── */
 function Users() {
   const [users, setUsers] = useState([]);
-  useEffect(() => { api.get('/admin/users').then(r => setUsers(r.data)).catch(() => {}); }, []);
-  const toggleActive = async (id, isActive) => { try { await api.put(`/admin/users/${id}`, { isActive: !isActive }); setUsers(u => u.map(x => x._id === id ? { ...x, isActive: !isActive } : x)); } catch {} };
+  useEffect(() => { api.get('/api/admin/users').then(r => setUsers(r.data)).catch(() => {}); }, []);
+  const toggleActive = async (id, isActive) => { try { await api.put(`/api/admin/users/${id}`, { isActive: !isActive }); setUsers(u => u.map(x => x._id === id ? { ...x, isActive: !isActive } : x)); } catch {} };
   return (
     <div>
       <h2>Users ({users.length})</h2>
@@ -55,8 +55,8 @@ function Users() {
 /* ── Sellers ── */
 function Sellers() {
   const [sellers, setSellers] = useState([]);
-  useEffect(() => { api.get('/admin/sellers').then(r => setSellers(r.data)).catch(() => {}); }, []);
-  const updateStatus = async (id, status) => { try { await api.put(`/admin/sellers/${id}`, { status }); setSellers(s => s.map(x => x._id === id ? { ...x, status } : x)); } catch {} };
+  useEffect(() => { api.get('/api/admin/sellers').then(r => setSellers(r.data)).catch(() => {}); }, []);
+  const updateStatus = async (id, status) => { try { await api.put(`/api/admin/sellers/${id}`, { status }); setSellers(s => s.map(x => x._id === id ? { ...x, status } : x)); } catch {} };
   return (
     <div>
       <h2>Sellers ({sellers.length})</h2>
@@ -79,9 +79,9 @@ function Sellers() {
 /* ── Products ── */
 function AdminProducts() {
   const [products, setProducts] = useState([]);
-  useEffect(() => { api.get('/admin/products').then(r => setProducts(r.data.products || r.data)).catch(() => {}); }, []);
-  const toggleApproval = async (id, current) => { try { await api.put(`/admin/products/${id}`, { isApproved: !current }); setProducts(p => p.map(x => x._id === id ? { ...x, isApproved: !current } : x)); } catch {} };
-  const deleteProduct = async (id) => { if (!window.confirm('Delete?')) return; try { await api.delete(`/admin/products/${id}`); setProducts(p => p.filter(x => x._id !== id)); } catch {} };
+  useEffect(() => { api.get('/api/admin/products').then(r => setProducts(r.data.products || r.data)).catch(() => {}); }, []);
+  const toggleApproval = async (id, current) => { try { await api.put(`/api/admin/products/${id}`, { isApproved: !current }); setProducts(p => p.map(x => x._id === id ? { ...x, isApproved: !current } : x)); } catch {} };
+  const deleteProduct = async (id) => { if (!window.confirm('Delete?')) return; try { await api.delete(`/api/admin/products/${id}`); setProducts(p => p.filter(x => x._id !== id)); } catch {} };
   return (
     <div>
       <h2>All Products ({products.length})</h2>
@@ -102,7 +102,7 @@ function AdminProducts() {
 
 function AdminReviews() {
   const [products, setProducts] = useState([]);
-  useEffect(() => { api.get('/admin/products').then(r => setProducts(r.data.products || r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/admin/products').then(r => setProducts(r.data.products || r.data)).catch(() => {}); }, []);
   return (
     <div>
       <h2>Reviews & Ratings</h2>
@@ -160,7 +160,7 @@ function Coupons() {
 /* ── Orders ── */
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
-  useEffect(() => { api.get('/admin/orders').then(r => setOrders(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/admin/orders').then(r => setOrders(r.data)).catch(() => {}); }, []);
   return (
     <div>
       <h2>All Orders ({orders.length})</h2>
@@ -181,7 +181,7 @@ function AdminOrders() {
 /* ── Payments ── */
 function Payments() {
   const [payments, setPayments] = useState([]);
-  useEffect(() => { api.get('/admin/payments').then(r => setPayments(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/admin/payments').then(r => setPayments(r.data)).catch(() => {}); }, []);
   return (
     <div>
       <h2>Payments</h2>
@@ -201,7 +201,7 @@ function Payments() {
 /* ── Reports ── */
 function Reports() {
   const [reports, setReports] = useState(null);
-  useEffect(() => { api.get('/admin/reports').then(r => setReports(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/admin/reports').then(r => setReports(r.data)).catch(() => {}); }, []);
   if (!reports) return <div className="loading-spinner"><div className="spinner"></div></div>;
   return (
     <div>
@@ -235,7 +235,7 @@ function Reports() {
 }
 
 function AdminSettings() {
-  const [form, setForm] = useState({ storeName: 'ShopKart', supportEmail: 'support@shopkart.com', autoApproveSellers: false });
+  const [form, setForm] = useState({ storeName: 'MyFashion', supportEmail: 'support@myfashion.com', autoApproveSellers: false });
   const [saved, setSaved] = useState(false);
   return (
     <div>
@@ -280,7 +280,7 @@ export default function AdminDashboard() {
     <div className="sd-layout">
       <aside className="sd-sidebar">
         <div className="sd-brand">
-          <Link to="/"><span className="logo-icon">♦</span> SHOP<span className="logo-gold">KART</span></Link>
+          <Link to="/"><span className="logo-icon">♦</span> My<span className="logo-gold">Fashion</span></Link>
           <span className="sd-role">Admin Panel</span>
         </div>
         <nav>

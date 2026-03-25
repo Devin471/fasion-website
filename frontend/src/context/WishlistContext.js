@@ -11,19 +11,19 @@ export function WishlistProvider({ children }) {
 
   const fetchWishlist = useCallback(async () => {
     if (!isCustomer) { setWishlist([]); return; }
-    try { const { data } = await api.get('/wishlist'); setWishlist(data.products || []); } catch {}
+    try { const { data } = await api.get('/api/wishlist'); setWishlist(data.products || []); } catch {}
   }, [isCustomer]);
 
   useEffect(() => { fetchWishlist(); }, [fetchWishlist]);
 
   const addToWishlist = async (productId) => {
     if (!isCustomer) return;
-    try { const { data } = await api.post('/wishlist', { productId }); setWishlist(data.products || []); } catch {}
+    try { const { data } = await api.post('/api/wishlist', { productId }); setWishlist(data.products || []); } catch {}
   };
 
   const removeFromWishlist = async (productId) => {
     if (!isCustomer) return;
-    try { const { data } = await api.delete(`/wishlist/${productId}`); setWishlist(data.products || []); } catch {}
+    try { const { data } = await api.delete(`/api/wishlist/${productId}`); setWishlist(data.products || []); } catch {}
   };
 
   const isInWishlist = (productId) => wishlist.some(p => (p._id || p) === productId);

@@ -18,7 +18,7 @@ async function seed() {
   await Promise.all([User.deleteMany(), Seller.deleteMany(), Admin.deleteMany(), Category.deleteMany(), Product.deleteMany()]);
 
   /* ── Admin ── */
-  const admin = await Admin.create({ name: 'Admin', email: 'admin@shopkart.com', password: 'admin123' });
+  const admin = await Admin.create({ name: 'Admin', email: 'devintyai471@gmail.com', password: 'Terabaapadmin@471' });
   console.log('✅ Admin created');
 
   /* ── Customer ── */
@@ -69,7 +69,7 @@ async function seed() {
   console.log('\n🎉 Seed complete! Credentials:');
   console.log('   Customer: customer@test.com / customer123');
   console.log('   Seller:   seller1@test.com  / seller123');
-  console.log('   Admin:    admin@shopkart.com / admin123\n');
+  console.log('   Admin:    devintyai471@gmail.com / Terabaapadmin@471\n');
   process.exit(0);
 }
 

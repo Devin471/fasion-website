@@ -11,14 +11,14 @@ export default function Profile() {
 
   useEffect(() => {
     (async () => {
-      try { const { data } = await api.get('/users/profile'); setProfile(data); setForm({ name: data.name, email: data.email, phone: data.phone || '' }); }
+      try { const { data } = await api.get('/api/users/profile'); setProfile(data); setForm({ name: data.name, email: data.email, phone: data.phone || '' }); }
       catch {}
     })();
   }, []);
 
   const handleSave = async e => {
     e.preventDefault();
-    try { const { data } = await api.put('/users/profile', form); setProfile(data); setEditing(false); setMsg('Profile updated!'); setTimeout(() => setMsg(''), 3000); }
+    try { const { data } = await api.put('/api/users/profile', form); setProfile(data); setEditing(false); setMsg('Profile updated!'); setTimeout(() => setMsg(''), 3000); }
     catch {}
   };
 

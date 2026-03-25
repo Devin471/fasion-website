@@ -40,7 +40,7 @@ export default function AdminLogin() {
           <h2>Admin Login</h2>
           <p className="auth-subtitle">Restricted access — authorized personnel only</p>
           {error && <div className="auth-error">{error}</div>}
-          <div className="form-group"><label>Email</label><input type="email" placeholder="admin@shopkart.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
+          <div className="form-group"><label>Email</label><input type="email" placeholder="admin@myfashion.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
           <div className="form-group"><label>Password</label>
             <div className="pwd-wrap"><input type={showPwd ? 'text' : 'password'} placeholder="Enter password" value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))} /><button type="button" className="pwd-toggle" onClick={() => setShowPwd(!showPwd)}>{showPwd ? '🙈' : '👁'}</button></div>
           </div>

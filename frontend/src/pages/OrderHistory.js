@@ -12,7 +12,7 @@ export default function OrderHistory() {
 
   useEffect(() => {
     (async () => {
-      try { const { data } = await api.get('/orders/my'); setOrders(data); }
+      try { const { data } = await api.get('/api/orders/my'); setOrders(data); }
       catch {}
       setLoading(false);
     })();
@@ -22,7 +22,7 @@ export default function OrderHistory() {
 
   return (
     <div className="oh-page">
-      <h1>My <span className="gold">Orders</span></h1>
+      <h1>My Orders</h1>
       {orders.length === 0 ? (
         <div className="empty-state"><h3>No orders yet</h3><p>Start shopping to see your orders here</p><Link to="/shop" className="btn btn-primary">Browse Shop</Link></div>
       ) : (
@@ -34,7 +34,7 @@ export default function OrderHistory() {
                   <span className="oh-id">#{o.orderNumber || o._id.slice(-8)}</span>
                   <span className="oh-date">{new Date(o.createdAt).toLocaleDateString()}</span>
                 </div>
-                <span className="oh-status" style={{ color: statusColors[o.status] || '#d4a843', borderColor: statusColors[o.status] || '#d4a843' }}>{o.status}</span>
+                <span className="oh-status" style={{ color: '#111', borderColor: statusColors[o.status] || '#111', backgroundColor: `${statusColors[o.status] || '#111'}20` }}>{o.status}</span>
               </div>
               <div className="oh-items">
                 {o.items?.slice(0, 3).map((item, i) => (

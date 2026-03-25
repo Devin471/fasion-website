@@ -25,7 +25,17 @@ router.put('/profile', verifyCustomer, async (req, res) => {
 router.post('/addresses', verifyCustomer, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    user.addresses.push(req.body);
+    const payload = { ...req.body };
+
+    if (!user.addresses.length) {
+      payload.isDefault = true;
+    }
+
+    if (payload.isDefault) {
+      user.addresses = user.addresses.map((addr) => ({ ...addr.toObject(), isDefault: false }));
+    }
+
+    user.addresses.push(payload);
     await user.save();
     res.json(user.addresses);
   } catch (err) { res.status(500).json({ error: err.message }); }

@@ -9,9 +9,12 @@ export default function OrderConfirmation() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const address = order?.shippingAddress || {};
+  const paymentMethodLabel = order?.paymentMethod ? order.paymentMethod.toUpperCase() : 'N/A';
+
   useEffect(() => {
     (async () => {
-      try { const { data } = await api.get(`/orders/${id}`); setOrder(data); }
+      try { const { data } = await api.get(`/api/orders/${id}`); setOrder(data); }
       catch {}
       setLoading(false);
     })();
@@ -45,13 +48,20 @@ export default function OrderConfirmation() {
 
           <div className="oc-section">
             <h4>Shipping Address</h4>
-            <p>{order.shippingAddress?.fullName}<br />{order.shippingAddress?.street}<br />{order.shippingAddress?.city}, {order.shippingAddress?.state} - {order.shippingAddress?.pincode}</p>
+            <p>
+              {address.fullName || 'Customer'}
+              <br />
+              {address.line1 || 'Address unavailable'}
+              {address.line2 ? <><br />{address.line2}</> : null}
+              <br />
+              {address.city || ''}{address.city ? ', ' : ''}{address.state || ''} {address.pincode || ''}
+            </p>
           </div>
 
           <div className="oc-section">
             <h4>Payment</h4>
-            <p>Method: {order.paymentMethod?.toUpperCase()}</p>
-            <p className="oc-total">Total: ₹{order.totalAmount?.toLocaleString()}</p>
+            <p>Method: {paymentMethodLabel}</p>
+            <p className="oc-total">Total: Rs {order.totalAmount?.toLocaleString()}</p>
           </div>
         </div>
 

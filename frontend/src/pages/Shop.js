@@ -22,7 +22,7 @@ export default function Shop() {
   });
   const page = parseInt(searchParams.get('page')) || 1;
 
-  useEffect(() => { api.get('/categories').then(r => setCategories(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/categories').then(r => setCategories(r.data)).catch(() => {}); }, []);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +36,7 @@ export default function Shop() {
         if (filters.brand) params.set('brand', filters.brand);
         if (filters.size) params.set('size', filters.size);
         if (filters.color) params.set('color', filters.color);
-        const { data } = await api.get(`/products?${params}`);
+        const { data } = await api.get(`/api/products?${params}`);
         setProducts(data.products || data);
         setTotal(data.total || 0);
       } catch {}

@@ -8,7 +8,16 @@ import './SellerDashboard.css';
 /* ── Sub-components ── */
 function Overview() {
   const [stats, setStats] = useState(null);
-  useEffect(() => { api.get('/seller/stats').then(r => setStats(r.data)).catch(() => {}); }, []);
+  const [error, setError] = useState(null);
+  useEffect(() => { 
+    api.get('/api/seller/stats')
+      .then(r => setStats(r.data))
+      .catch(err => {
+        console.error('Stats fetch error:', err);
+        setError(err.response?.data?.error || 'Failed to load stats');
+      });
+  }, []);
+  if (error) return <div className="loading-spinner"><p style={{color: 'red'}}>{error}</p></div>;
   if (!stats) return <div className="loading-spinner"><div className="spinner"></div></div>;
   return (
     <div className="sd-overview">
@@ -33,11 +42,21 @@ function Overview() {
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => { api.get('/seller/products').then(r => setProducts(r.data)).catch(() => {}).finally(() => setLoading(false)); }, []);
-  const handleDelete = async (id) => { if (!window.confirm('Delete this product?')) return; try { await api.delete(`/products/${id}`); setProducts(p => p.filter(x => x._id !== id)); } catch {} };
+  useEffect(() => { 
+    api.get('/api/seller/products')
+      .then(r => setProducts(r.data || []))
+      .catch(err => {
+        console.error('Products fetch error:', err);
+        setError(err.response?.data?.error || 'Failed to load products');
+      })
+      .finally(() => setLoading(false));
+  }, []);
+  const handleDelete = async (id) => { if (!window.confirm('Delete this product?')) return; try { await api.delete(`/api/products/${id}`); setProducts(p => p.filter(x => x._id !== id)); } catch (err) { console.error('Delete error:', err); } };
 
+  if (error) return <div className="loading-spinner"><p style={{color: 'red'}}>{error}</p></div>;
   if (loading) return <div className="loading-spinner"><div className="spinner"></div></div>;
   return (
     <div>
@@ -81,7 +100,7 @@ function AddProduct() {
 
   useEffect(() => {
     // Always fetch latest seller status
-    api.get('/auth/seller/me').then(r => {
+    api.get('/api/auth/seller/me').then(r => {
       setSeller(r.data);
       // Optionally update localStorage
       localStorage.setItem('seller', JSON.stringify(r.data));
@@ -99,7 +118,7 @@ function AddProduct() {
 
   const missingRequired = requiredCategoryNames.filter((name) => !cats.some((c) => c.name?.toLowerCase() === name.toLowerCase()));
 
-  useEffect(() => { api.get('/categories').then(r => setCats(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/categories').then(r => setCats(r.data)).catch(() => {}); }, []);
 
   const handleImageSelect = (e) => {
     const files = Array.from(e.target.files || []);
@@ -111,7 +130,7 @@ function AddProduct() {
     if (!imageFiles.length) return [];
     const fd = new FormData();
     imageFiles.forEach((file) => fd.append('images', file));
-    const { data } = await api.post('/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    const { data } = await api.post('/api/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
     const serverBase = api.defaults.baseURL.replace('/api', '');
     return (data.urls || []).map((url) => `${serverBase}${url}`);
   };
@@ -132,7 +151,7 @@ function AddProduct() {
         colors: form.colors.split(',').map(s => s.trim()).filter(Boolean),
         tags: form.tags.split(',').map(s => s.trim()).filter(Boolean),
       };
-      await api.post('/products', payload);
+      await api.post('/api/products', payload);
       navigate('/seller/products');
     } catch (err) {
       setError(err.response?.data?.error || err.response?.data?.message || 'Failed to add product');
@@ -201,7 +220,7 @@ function EditProduct() {
   const missingRequired = requiredCategoryNames.filter((name) => !cats.some((c) => c.name?.toLowerCase() === name.toLowerCase()));
 
   useEffect(() => {
-    Promise.all([api.get(`/products/${id}`), api.get('/categories')]).then(([pr, cr]) => {
+    Promise.all([api.get(`/api/products/${id}`), api.get('/api/categories')]).then(([pr, cr]) => {
       const p = pr.data;
       setForm({ name: p.name, description: p.description, price: p.price, originalPrice: p.originalPrice, category: p.category?._id || p.category, brand: p.brand || '', stock: p.stock,
         images: (p.images || []).join(', '), sizes: (p.sizes || []).join(', '), colors: (p.colors || []).join(', '), tags: (p.tags || []).join(', ') });
@@ -254,7 +273,7 @@ function EditProduct() {
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  useEffect(() => { api.get('/orders/seller/list').then(r => setOrders(r.data)).catch(() => {}).finally(() => setLoading(false)); }, []);
+  useEffect(() => { api.get('/api/orders/seller/list').then(r => setOrders(r.data)).catch(() => {}).finally(() => setLoading(false)); }, []);
   const updateStatus = async (id, status) => { try { await api.put(`/orders/${id}/status`, { status }); setOrders(o => o.map(x => x._id === id ? { ...x, status } : x)); } catch {} };
   if (loading) return <div className="loading-spinner"><div className="spinner"></div></div>;
   return (
@@ -282,7 +301,7 @@ function Orders() {
 
 function Inventory() {
   const [products, setProducts] = useState([]);
-  useEffect(() => { api.get('/seller/products').then(r => setProducts(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/seller/products').then(r => setProducts(r.data)).catch(() => {}); }, []);
   const lowStock = products.filter(p => (p.stock || 0) < 8);
   return (
     <div>
@@ -307,7 +326,7 @@ function Inventory() {
 
 function Customers() {
   const [orders, setOrders] = useState([]);
-  useEffect(() => { api.get('/orders/seller/list').then(r => setOrders(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/orders/seller/list').then(r => setOrders(r.data)).catch(() => {}); }, []);
   const customerMap = orders.reduce((acc, o) => {
     const key = o.user?._id || o.user?.email || 'unknown';
     if (!acc[key]) acc[key] = { name: o.user?.name || 'Guest', email: o.user?.email || 'N/A', count: 0, spent: 0 };
@@ -332,7 +351,7 @@ function Customers() {
 
 function Analytics() {
   const [data, setData] = useState(null);
-  useEffect(() => { api.get('/seller/analytics').then(r => setData(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/seller/analytics').then(r => setData(r.data)).catch(() => {}); }, []);
   if (!data) return <div className="loading-spinner"><div className="spinner"></div></div>;
   return (
     <div>
@@ -349,7 +368,7 @@ function Analytics() {
 
 function Earnings() {
   const [data, setData] = useState(null);
-  useEffect(() => { api.get('/seller/analytics').then(r => setData(r.data)).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/seller/analytics').then(r => setData(r.data)).catch(() => {}); }, []);
   if (!data) return <div className="loading-spinner"><div className="spinner"></div></div>;
 
   const totalRevenue = (data.monthly || []).reduce((sum, month) => sum + (month.revenue || 0), 0);
@@ -381,7 +400,7 @@ function Settings() {
 
   const handleSave = async e => {
     e.preventDefault();
-    try { await api.put('/seller/profile', form); setMsg('Profile updated!'); setTimeout(() => setMsg(''), 3000); } catch {}
+    try { await api.put('/api/seller/profile', form); setMsg('Profile updated!'); setTimeout(() => setMsg(''), 3000); } catch (err) { console.error('Profile update error:', err); }
   };
 
   return (
@@ -400,10 +419,20 @@ function Settings() {
 
 /* ── Main Dashboard Shell ── */
 export default function SellerDashboard() {
-  const { seller, logoutSeller } = useAuth();
+  const { seller, logoutSeller, isSeller } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
+
+  // Redirect to login if not authenticated
+  if (!isSeller) {
+    return (
+      <div className="loading-spinner">
+        <p>Redirecting to seller login...</p>
+        {setTimeout(() => navigate('/seller/login'), 1000) || null}
+      </div>
+    );
+  }
 
   const links = [
     { to: '/seller/dashboard', label: 'Dashboard', icon: '📊' },
@@ -421,7 +450,7 @@ export default function SellerDashboard() {
     <div className="sd-layout">
       <aside className="sd-sidebar">
         <div className="sd-brand">
-          <Link to="/"><span className="logo-icon">♦</span> SHOP<span className="logo-gold">KART</span></Link>
+          <Link to="/"><span className="logo-icon">♦</span> My<span className="logo-gold">Fashion</span></Link>
           <span className="sd-role">Seller Panel</span>
         </div>
         <nav>
