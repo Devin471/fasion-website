@@ -14,8 +14,10 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 820);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 820);
@@ -23,23 +25,46 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  useEffect(() => {
+    if (!profileOpen) return;
+    const handleClickOutside = e => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setProfileOpen(false);
+    };
+    const handleKeyDown = e => {
+      if (e.key === 'Escape') setProfileOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [profileOpen]);
+
   const handleSearch = e => {
     e.preventDefault();
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
       setQuery('');
       setMenuOpen(false);
+      setProfileOpen(false);
       setShowMobileSearch(false);
     }
   };
 
   const toggleMenu = () => {
     setMenuOpen(prev => !prev);
+    setProfileOpen(false);
     setShowMobileSearch(false);
   };
 
   const handleProfileClick = () => {
-    toggleMenu();
+    if (isMobile) {
+      setMenuOpen(true);
+      setProfileOpen(false);
+    } else {
+      setProfileOpen(prev => !prev);
+    }
   };
 
   /* hide navbar on seller/admin dashboards */
@@ -92,11 +117,20 @@ export default function Navbar() {
                 {cartCount > 0 && <span className="nav-badge">{cartCount}</span>}
               </Link>
               {isCustomer ? (
-                <div className="nav-dropdown">
-                  <button className="nav-user-btn" onClick={handleProfileClick}>
+                <div className="nav-dropdown" ref={dropdownRef}>
+                  <button className="nav-user-btn" onClick={handleProfileClick} aria-haspopup="true" aria-expanded={profileOpen}>
                     <span className="nav-avatar">{customer?.name?.[0]?.toUpperCase() || 'U'}</span>
                     <span className="nav-username">{customer?.name?.split(' ')[0]}</span>
                   </button>
+                  {!isMobile && profileOpen && (
+                    <div className="dropdown-menu">
+                      <Link to="/profile" onClick={() => setProfileOpen(false)}>My Profile</Link>
+                      <Link to="/orders" onClick={() => setProfileOpen(false)}>My Orders</Link>
+                      <Link to="/wishlist" onClick={() => setProfileOpen(false)}>My Wishlist</Link>
+                      <hr />
+                      <button onClick={() => { logoutCustomer(); setProfileOpen(false); navigate('/'); }}>Logout</button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
@@ -120,7 +154,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {menuOpen && (
+      {menuOpen && isMobile && (
         <div className="nav-mobile-overlay" onClick={() => setMenuOpen(false)}>
           <div className="nav-mobile-panel" onClick={e => e.stopPropagation()}>
             <div className="nav-mobile-menu">

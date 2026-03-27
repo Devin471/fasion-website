@@ -1,15 +1,15 @@
 /* ─── About CSS ────────────────────────────────────── */
-.about-page { max-width:1100px; margin:0 auto; padding:3rem 1.5rem; }
+.about-page { max-width:1100px; margin:0 auto; padding:3rem 1.5rem; color:#000; }
 .about-hero { text-align:center; margin-bottom:3.5rem; }
-.about-hero h1 { color:#fff; font-size:2.2rem; font-weight:800; margin:.6rem 0; }
-.about-hero p { color:rgba(255,255,255,.5); max-width:550px; margin:0 auto; line-height:1.7; }
+.about-hero h1 { color:var(--text); font-size:2.2rem; font-weight:800; margin:.6rem 0; }
+.about-hero p { color:var(--text-muted); max-width:550px; margin:0 auto; line-height:1.7; }
 .about-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; margin-bottom:3.5rem; }
 .about-card { background:var(--glass); border:1px solid rgba(212,168,67,.08); border-radius:var(--radius-lg); padding:2rem; transition:all .3s; }
 .about-card:hover { border-color:rgba(212,168,67,.25); transform:translateY(-4px); }
 .about-icon { font-size:2rem; display:block; margin-bottom:.8rem; }
-.about-card h3 { color:#fff; font-size:1.05rem; margin-bottom:.5rem; }
-.about-card p { color:rgba(255,255,255,.5); font-size:.88rem; line-height:1.7; }
+.about-card h3 { color:var(--text); font-size:1.05rem; margin-bottom:.5rem; }
+.about-card p { color:var(--text-muted); font-size:.88rem; line-height:1.7; }
 .about-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; padding:2.5rem; background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(212,168,67,.02)); border:1px solid rgba(212,168,67,.12); border-radius:var(--radius-lg); text-align:center; }
 .about-stat-num { display:block; color:var(--gold); font-size:2rem; font-weight:800; }
-.about-stat-label { color:rgba(255,255,255,.4); font-size:.82rem; text-transform:uppercase; letter-spacing:1px; }
+.about-stat-label { color:var(--text-muted); font-size:.82rem; text-transform:uppercase; letter-spacing:1px; }
 @media(max-width:640px) { .about-stats { grid-template-columns:1fr 1fr; } }
