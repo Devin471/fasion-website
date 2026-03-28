@@ -59,12 +59,9 @@ export default function Navbar() {
   };
 
   const handleProfileClick = () => {
-    if (isMobile) {
-      setMenuOpen(true);
-      setProfileOpen(false);
-    } else {
-      setProfileOpen(prev => !prev);
-    }
+    setProfileOpen(prev => !prev);
+    setMenuOpen(false);
+    setShowMobileSearch(false);
   };
 
   /* hide navbar on seller/admin dashboards */
@@ -79,18 +76,20 @@ export default function Navbar() {
           <span className="logo-text">My<span className="logo-gold">Fashion</span></span>
         </Link>
 
-        <div className="nav-links-main">
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-          <Link to="/shop">Categories</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-        </div>
+        <div className="nav-primary-box">
+          <div className="nav-links-main">
+            <Link to="/">Home</Link>
+            <Link to="/shop">Shop</Link>
+            <Link to="/shop">Categories</Link>
+            <Link to="/about">About</Link>
+            <Link to="/contact">Contact</Link>
+          </div>
 
-        <form className="nav-search" onSubmit={handleSearch}>
-          <input type="text" placeholder="Search for products, brands and more..." value={query} onChange={e => setQuery(e.target.value)} />
-          <button type="submit">⌕</button>
-        </form>
+          <form className="nav-search" onSubmit={handleSearch}>
+            <input type="text" placeholder="Search for products, brands and more..." value={query} onChange={e => setQuery(e.target.value)} />
+            <button type="submit">⌕</button>
+          </form>
+        </div>
 
         <div className="nav-actions">
           <button className="nav-search-toggle" onClick={() => setShowMobileSearch(s => !s)} aria-label="Toggle search">
@@ -122,7 +121,7 @@ export default function Navbar() {
                     <span className="nav-avatar">{customer?.name?.[0]?.toUpperCase() || 'U'}</span>
                     <span className="nav-username">{customer?.name?.split(' ')[0]}</span>
                   </button>
-                  {!isMobile && profileOpen && (
+                  {profileOpen && (
                     <div className="dropdown-menu">
                       <Link to="/profile" onClick={() => setProfileOpen(false)}>My Profile</Link>
                       <Link to="/orders" onClick={() => setProfileOpen(false)}>My Orders</Link>

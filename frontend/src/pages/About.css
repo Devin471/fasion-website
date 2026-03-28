@@ -9,7 +9,7 @@
 .about-icon { font-size:2rem; display:block; margin-bottom:.8rem; }
 .about-card h3 { color:var(--text); font-size:1.05rem; margin-bottom:.5rem; }
 .about-card p { color:var(--text-muted); font-size:.88rem; line-height:1.7; }
-.about-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; padding:2.5rem; background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(212,168,67,.02)); border:1px solid rgba(212,168,67,.12); border-radius:var(--radius-lg); text-align:center; }
-.about-stat-num { display:block; color:var(--gold); font-size:2rem; font-weight:800; }
-.about-stat-label { color:var(--text-muted); font-size:.82rem; text-transform:uppercase; letter-spacing:1px; }
+.about-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; padding:2.5rem; background:linear-gradient(135deg,rgba(255,111,97,.18),rgba(232,88,77,.12)); border:1px solid rgba(232,88,77,.25); border-radius:var(--radius-lg); text-align:center; }
+.about-stat-num { display:block; color:#d85b46; font-size:2rem; font-weight:800; }
+.about-stat-label { color:#b94d3e; font-size:.82rem; text-transform:uppercase; letter-spacing:1px; }
 @media(max-width:640px) { .about-stats { grid-template-columns:1fr 1fr; } }
