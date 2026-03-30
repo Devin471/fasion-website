@@ -10,7 +10,7 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
         {product.designer_name && (
           <p className="product-designer">Designer: {product.designer_name}</p>
         )}
-        <p className="product-category">{product.category}</p>
+        <p className="product-category">{product.category?.name || product.category}</p>
         <p className="product-description">{product.description}</p>
         {product.designer_bio && (
           <p className="product-designer-bio">{product.designer_bio}</p>
