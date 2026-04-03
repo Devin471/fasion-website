@@ -45,8 +45,17 @@ if (!fs.existsSync(uploadsDir)) {
 // MIDDLEWARE - PARSING & CORS
 // ═════════════════════════════════════════════════════════════════════════
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3000',
+  process.env.CLIENT_URL,
+  'https://fasion-website.vercel.app', // Vercel
+  'https://myfashion12.netlify.app'    // Netlify
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
