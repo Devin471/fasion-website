@@ -88,7 +88,7 @@ function Products() {
 
 function AddProduct() {
   const navigate = useNavigate();
-  const { seller: sellerContext, logoutSeller } = useAuth();
+  const { seller: sellerContext } = useAuth();
   const [seller, setSeller] = useState(sellerContext);
   const [cats, setCats] = useState([]);
   const [form, setForm] = useState({ name: '', description: '', price: '', originalPrice: '', category: '', brand: '', stock: '', sizes: '', colors: '', tags: '' });
@@ -107,7 +107,7 @@ function AddProduct() {
     }).catch(() => {
       setSeller(sellerContext);
     });
-  }, []);
+  }, [sellerContext]);
 
   const getOrderedCategories = () => {
     const byName = (name) => cats.find((c) => c.name?.toLowerCase() === name.toLowerCase());
