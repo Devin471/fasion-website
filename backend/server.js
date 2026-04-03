@@ -121,6 +121,34 @@ app.use('/api/seller', sellerRoutes);
 app.use('/api/admin', adminRoutes);
 
 // ═════════════════════════════════════════════════════════════════════════
+// ROOT ENDPOINT
+// ═════════════════════════════════════════════════════════════════════════
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Welcome to MyFashion Backend API',
+    service: 'myfashion-backend',
+    version: '2.0.0',
+    status: 'running',
+    environment: NODE_ENV,
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      products: '/api/products',
+      categories: '/api/categories',
+      cart: '/api/cart',
+      wishlist: '/api/wishlist',
+      orders: '/api/orders',
+      reviews: '/api/reviews',
+      users: '/api/users',
+      seller: '/api/seller',
+      admin: '/api/admin'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// ═════════════════════════════════════════════════════════════════════════
 // 404 HANDLER - MUST COME AFTER ALL ROUTES
 // ═════════════════════════════════════════════════════════════════════════
 
