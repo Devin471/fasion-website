@@ -3,11 +3,17 @@ import axios from 'axios';
 
 // Determine base URL dynamically
 const getBaseURL = () => {
-  // If running on production (Netlify/Render), use the deployed URL
-  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    // Assuming backend is deployed at same domain with /api prefix or different domain
-    return `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
+  // Use environment variable if specified (for Vercel deployment)
+  if (process.env.REACT_APP_BACKEND_URL) {
+    return process.env.REACT_APP_BACKEND_URL;
   }
+  
+  // If running on production (Vercel), use backend on Render
+  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return 'https://fasion-website-1.onrender.com';
+  }
+  
+  // Development: use localhost
   return 'http://localhost:5000';
 };
 
