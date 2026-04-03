@@ -284,14 +284,14 @@ export default function Checkout() {
                   <p className="cos-name">{p.name}</p>
                   <p className="cos-qty">Qty: {item.quantity}</p>
                 </div>
-                <span className="cos-price">Rs {(p.price * item.quantity).toLocaleString()}</span>
+                <span className="cos-price">₹{(p.price * item.quantity).toLocaleString()}</span>
               </div>
             );
           })}
           <hr />
-          <div className="cs-row"><span>Subtotal</span><span>Rs {subtotal.toLocaleString()}</span></div>
-          <div className="cs-row"><span>Shipping</span><span>{shipping === 0 ? 'Free' : `Rs ${shipping}`}</span></div>
-          <div className="cs-row cs-total"><span>Total</span><span>Rs {total.toLocaleString()}</span></div>
+          <div className="cs-row"><span>Subtotal</span><span>₹{subtotal.toLocaleString()}</span></div>
+          <div className="cs-row"><span>Shipping</span><span>{shipping === 0 ? 'Free' : `₹${shipping}`}</span></div>
+          <div className="cs-row cs-total"><span>Total</span><span>₹{total.toLocaleString()}</span></div>
         </div>
       </div>
     </div>

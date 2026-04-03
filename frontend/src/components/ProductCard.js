@@ -1,10 +1,27 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import './ProductCard.css';
 
 function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { isCustomer } = useAuth();
+
+  const handleAddToCart = () => {
+    if (!isCustomer) {
+      navigate('/login');
+      return;
+    }
+    addToCart(product._id, 1);
+  };
+
+  const handleClick = onAddToCart ? () => onAddToCart(product) : handleAddToCart;
+
   return (
     <div className="product-card">
-      <img src={product.image_url} alt={product.name} className="product-image" />
+      <img src={product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'} alt={product.name} className="product-image" />
       <div className="product-info">
         <h3 className="product-name">{product.name}</h3>
         {product.designer_name && (
@@ -15,12 +32,12 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
         {product.designer_bio && (
           <p className="product-designer-bio">{product.designer_bio}</p>
         )}
-        <p className="product-price">${product.price}</p>
+        <p className="product-price">₹{product.price}</p>
         <p className="product-stock">Stock: {product.stock}</p>
         {!isAdmin ? (
           <button 
             className="product-button"
-            onClick={() => onAddToCart(product)}
+            onClick={handleClick}
             disabled={product.stock === 0}
           >
             {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
