@@ -50,7 +50,7 @@ const allowedOrigins = [
   'http://localhost:3001',
   'http://127.0.0.1:3000',
   process.env.CLIENT_URL,
-  'https://fasion-website.vercel.app', // Vercel
+  'https://fasion-website-k1tnwrsbt-devin471s-projects.vercel.app', // Vercel
   'https://myfashion12.netlify.app'    // Netlify
 ].filter(Boolean);
 
