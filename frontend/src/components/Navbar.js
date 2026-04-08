@@ -18,6 +18,7 @@ export default function Navbar() {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 820);
   const dropdownRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 820);
@@ -40,6 +41,22 @@ export default function Navbar() {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [profileOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = e => {
+      if (hamburgerRef.current && !hamburgerRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    const handleKeyDown = e => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [menuOpen]);
 
   const handleSearch = e => {
     e.preventDefault();
@@ -71,6 +88,42 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-container">
+        {/* Hamburger Menu - Dropdown Container */}
+        <div ref={hamburgerRef} style={{ position: 'relative' }}>
+          <button className="nav-hamburger" onClick={toggleMenu} aria-label="Open navigation menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          {menuOpen && isMobile && (
+            <div className="nav-mobile-panel" onClick={e => e.stopPropagation()}>
+              <div className="nav-mobile-menu">
+                {/* Main Navigation Links */}
+                <a href="/" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>Home</a>
+                <a href="/shop" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>Shop</a>
+                <a href="/about" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>About</a>
+                <a href="/contact" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>Contact</a>
+                
+                <div className="nav-mobile-divider" />
+                
+                {/* Profile Section - Only Show When Logged In */}
+                {isCustomer ? (
+                  <>
+                    <a href="/profile" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>My Profile</a>
+                    <a href="/orders" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>My Orders</a>
+                    <a href="/wishlist" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>My Wishlist</a>
+                    <div className="nav-mobile-divider" />
+                    <button className="nav-mobile-logout" onClick={() => { logoutCustomer(); setMenuOpen(false); navigate('/'); }}>Logout</button>
+                  </>
+                ) : (
+                  <a href="/login" className="nav-mobile-login" onClick={() => setMenuOpen(false)}>Login</a>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
         <Link to="/" className="nav-logo">
           <img src="/logo-mf-luxury.svg" alt="MF Logo" className="logo-icon" style={{width:'2rem',height:'2rem',marginRight:'0.3rem'}} />
           <span className="logo-text">My<span className="logo-gold">Fashion</span></span>
@@ -132,12 +185,7 @@ export default function Navbar() {
                   )}
                 </div>
               ) : (
-                <>
-                  <button className="nav-user-btn" onClick={toggleMenu} aria-label="Open menu">
-                    <span className="nav-avatar">U</span>
-                  </button>
-                  <Link to="/login" className="nav-login-btn">Login</Link>
-                </>
+                <Link to="/login" className="nav-login-btn">Login</Link>
               )}
             </>
           )}
@@ -150,20 +198,6 @@ export default function Navbar() {
             <input placeholder="Search for products, brands and more..." value={query} onChange={e => setQuery(e.target.value)} />
             <button type="submit">⌕</button>
           </form>
-        </div>
-      )}
-
-      {menuOpen && isMobile && (
-        <div className="nav-mobile-overlay" onClick={() => setMenuOpen(false)}>
-          <div className="nav-mobile-panel" onClick={e => e.stopPropagation()}>
-            <div className="nav-mobile-menu">
-              <Link to="/profile" onClick={() => setMenuOpen(false)}>My Profile</Link>
-              {isCustomer && <Link to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link>}
-              {isCustomer && <Link to="/wishlist" onClick={() => setMenuOpen(false)}>My Wishlist</Link>}
-              {isCustomer && <button className="nav-link" onClick={() => { logoutCustomer(); setMenuOpen(false); navigate('/'); }}>Logout</button>}
-              {!isCustomer && !isSeller && !isAdmin && <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>}
-            </div>
-          </div>
         </div>
       )}
     </nav>
