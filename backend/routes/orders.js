@@ -8,11 +8,20 @@ const Product = require('../models/Product');
 const Payment = require('../models/Payment');
 const { verifyCustomer, verifySeller } = require('../middleware/auth');
 
-/* Initialize Razorpay */
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+/* Initialize Razorpay lazily (only when needed) */
+let razorpay = null;
+const initRazorpay = () => {
+  if (!razorpay) {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      throw new Error('Missing RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET environment variables');
+    }
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+  }
+  return razorpay;
+};
 
 /* Create order */
 router.post('/', verifyCustomer, async (req, res) => {
@@ -82,10 +91,11 @@ router.put('/:id/status', verifySeller, async (req, res) => {
 /* Create Razorpay Order */
 router.post('/create-razorpay-order', verifyCustomer, async (req, res) => {
   try {
+    const rp = initRazorpay(); // Initialize Razorpay
     const { orderId, amount } = req.body;
     if (!orderId || !amount) return res.status(400).json({ error: 'Missing orderId or amount' });
 
-    const razorpayOrder = await razorpay.orders.create({
+    const razorpayOrder = await rp.orders.create({
       amount: amount, // Amount in paise
       currency: 'INR',
       receipt: `order_${orderId}`,
