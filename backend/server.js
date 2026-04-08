@@ -51,8 +51,7 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   process.env.CLIENT_URL,
   'https://fasion-website-git-main-devin471s-projects.vercel.app', // Vercel
-  'http://localhost:3000',
-  'https://myfashion12.netlify.app'    // Netlify
+      // Netlify
 ].filter(Boolean);
 
 app.use(cors({
