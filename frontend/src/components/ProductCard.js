@@ -1,7 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { FaShoppingCart, FaEdit, FaTrash, FaStar } from 'react-icons/fa';
 import './ProductCard.css';
 
 function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
@@ -20,8 +22,25 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
   const handleClick = onAddToCart ? () => onAddToCart(product) : handleAddToCart;
 
   return (
-    <div className="product-card">
-      <img src={product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'} alt={product.name} className="product-image" />
+    <motion.div
+      className="product-card"
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <motion.div
+        className="product-image-container"
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <img 
+          src={product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'} 
+          alt={product.name} 
+          className="product-image"
+        />
+      </motion.div>
       <div className="product-info">
         <h3 className="product-name">{product.name}</h3>
         {product.designer_name && (
@@ -35,21 +54,43 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
         <p className="product-price">₹{product.price}</p>
         <p className="product-stock">Stock: {product.stock}</p>
         {!isAdmin ? (
-          <button 
+          <motion.button
             className="product-button"
             onClick={handleClick}
             disabled={product.stock === 0}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 10 }}
           >
-            {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-          </button>
+            <FaShoppingCart /> {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+          </motion.button>
         ) : (
-          <div className="admin-actions">
-            <button className="edit-btn" onClick={() => onEdit(product)}>Edit</button>
-            <button className="delete-btn" onClick={() => onDelete(product.id)}>Delete</button>
-          </div>
+          <motion.div
+            className="admin-actions"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <motion.button
+              className="edit-btn"
+              onClick={() => onEdit(product)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FaEdit /> Edit
+            </motion.button>
+            <motion.button
+              className="delete-btn"
+              onClick={() => onDelete(product.id)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FaTrash /> Delete
+            </motion.button>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
