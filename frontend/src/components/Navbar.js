@@ -210,17 +210,16 @@ export default function Navbar() {
                     </motion.button>
                   </>
                 ) : (
-                  <motion.a
-                    href="/login"
+                  <motion.button
                     className="nav-mobile-login"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => { navigate('/login'); setMenuOpen(false); }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.35 }}
                     whileHover={{ x: 10 }}
                   >
                     <FaUser /> Login
-                  </motion.a>
+                  </motion.button>
                 )}
               </motion.div>
             </motion.div>
@@ -242,19 +241,16 @@ export default function Navbar() {
         <div className="nav-primary-box">
           <div className="nav-links-main">
             <motion.div whileHover={{ color: 'var(--coral)' }} transition={{ duration: 0.2 }}>
-              <Link to="/"><FaHome /> Home</Link>
+              <Link to="/" title="Home"><FaHome /></Link>
             </motion.div>
             <motion.div whileHover={{ color: 'var(--coral)' }} transition={{ duration: 0.2 }}>
-              <Link to="/shop"><FaShoppingBag /> Shop</Link>
+              <Link to="/shop" title="Shop"><FaShoppingBag /></Link>
             </motion.div>
             <motion.div whileHover={{ color: 'var(--coral)' }} transition={{ duration: 0.2 }}>
-              <Link to="/shop"><FaShoppingBag /> Categories</Link>
+              <Link to="/about" title="About"><FaInfoCircle /></Link>
             </motion.div>
             <motion.div whileHover={{ color: 'var(--coral)' }} transition={{ duration: 0.2 }}>
-              <Link to="/about"><FaInfoCircle /> About</Link>
-            </motion.div>
-            <motion.div whileHover={{ color: 'var(--coral)' }} transition={{ duration: 0.2 }}>
-              <Link to="/contact"><FaPhone /> Contact</Link>
+              <Link to="/contact" title="Contact"><FaPhone /></Link>
             </motion.div>
           </div>
 

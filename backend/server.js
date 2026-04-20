@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
@@ -45,6 +46,9 @@ if (!fs.existsSync(uploadsDir)) {
 // MIDDLEWARE - PARSING & CORS
 // ═════════════════════════════════════════════════════════════════════════
 
+// Enable gzip compression for all responses
+app.use(compression());
+
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
@@ -65,23 +69,24 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(uploadsDir));
+// Serve uploaded files statically with caching
+app.use('/uploads', express.static(uploadsDir, { 
+  maxAge: '7d',
+  etag: false
+}));
 
-// ═════════════════════════════════════════════════════════════════════════
-// LOGGING MIDDLEWARE
-// ═════════════════════════════════════════════════════════════════════════
+// Cache middleware for GET requests
+const cacheMiddleware = (duration) => {
+  return (req, res, next) => {
+    res.set('Cache-Control', `public, max-age=${duration}`);
+    next();
+  };
+};
 
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.path}`);
-  next();
-});
-
-// ═════════════════════════════════════════════════════════════════════════
-// HEALTH CHECK ENDPOINT
-// ═════════════════════════════════════════════════════════════════════════
-
+// Apply caching to static API endpoints (products, categories, etc.)
+app.use('/api/products', cacheMiddleware(300)); // 5 minutes
+app.use('/api/categories', cacheMiddleware(600)); // 10 minutes
+app.use('/api/health', cacheMiddleware(60)); // 1 minute
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
@@ -91,6 +96,16 @@ app.get('/api/health', (req, res) => {
     environment: NODE_ENV,
     timestamp: new Date().toISOString()
   });
+});
+
+// ═════════════════════════════════════════════════════════════════════════
+// LOGGING MIDDLEWARE
+// ═════════════════════════════════════════════════════════════════════════
+
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.path}`);
+  next();
 });
 
 // ═════════════════════════════════════════════════════════════════════════

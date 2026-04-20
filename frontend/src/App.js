@@ -1,5 +1,5 @@
 /* ─── App.js — Main Router with Animations ─────────────────────────── */
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -9,33 +9,40 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import './App.css';
 
-/* ── Pages — Lazy ── */
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import ProductDetail from './pages/ProductDetail';
-import SearchResults from './pages/SearchResults';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Payment from './pages/Payment';
-import OrderConfirmation from './pages/OrderConfirmation';
-import CustomerLogin from './pages/CustomerLogin';
-import CustomerRegister from './pages/CustomerRegister';
-import Profile from './pages/Profile';
-import OrderHistory from './pages/OrderHistory';
-import Wishlist from './pages/Wishlist';
-import Contact from './pages/Contact';
+/* ── Loading Fallback ── */
+const PageLoader = () => (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+    <div style={{ fontSize: '14px', color: '#999' }}>Loading...</div>
+  </div>
+);
 
-import SellerLogin from './pages/SellerLogin';
-import SellerRegister from './pages/SellerRegister';
-import SellerDashboard from './pages/SellerDashboard';
+/* ── Pages — Lazy Loaded ── */
+const Home = lazy(() => import('./pages/Home'));
+const Shop = lazy(() => import('./pages/Shop'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const SearchResults = lazy(() => import('./pages/SearchResults'));
+const Cart = lazy(() => import('./pages/Cart'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const Payment = lazy(() => import('./pages/Payment'));
+const OrderConfirmation = lazy(() => import('./pages/OrderConfirmation'));
+const CustomerLogin = lazy(() => import('./pages/CustomerLogin'));
+const CustomerRegister = lazy(() => import('./pages/CustomerRegister'));
+const Profile = lazy(() => import('./pages/Profile'));
+const OrderHistory = lazy(() => import('./pages/OrderHistory'));
+const Wishlist = lazy(() => import('./pages/Wishlist'));
+const Contact = lazy(() => import('./pages/Contact'));
 
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
+const SellerLogin = lazy(() => import('./pages/SellerLogin'));
+const SellerRegister = lazy(() => import('./pages/SellerRegister'));
+const SellerDashboard = lazy(() => import('./pages/SellerDashboard'));
 
-import About from './pages/About';
-import FAQ from './pages/FAQ';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Terms from './pages/Terms';
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+
+const About = lazy(() => import('./pages/About'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const Terms = lazy(() => import('./pages/Terms'));
 
 /* ── Route Guards ── */
 function ProtectedCustomer({ children }) {
@@ -66,18 +73,19 @@ function AppContent() {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          <Routes location={location}>
+          <Suspense fallback={<PageLoader />}>
+            <Routes location={location}>
             {/* Public */}
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/shop/:category" element={<Shop />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/login" element={<CustomerLogin />} />
-            <Route path="/register" element={<CustomerRegister />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/:category" element={<Shop />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/login" element={<CustomerLogin />} />
+              <Route path="/register" element={<CustomerRegister />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
 
@@ -113,6 +121,7 @@ function AppContent() {
               </motion.div>
             } />
           </Routes>
+          </Suspense>
         </motion.main>
       </AnimatePresence>
       <Footer />

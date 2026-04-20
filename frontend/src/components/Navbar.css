@@ -10,7 +10,7 @@
 .nav-container {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -23,7 +23,7 @@
   align-items: center;
   gap: 1rem;
   flex: 1;
-  padding: 0.6rem 0.85rem;
+  padding: 0.55rem 1rem;
   background: linear-gradient(135deg, rgba(255, 223, 209, 0.7), rgba(255, 205, 186, 0.8));
   border: 1px solid rgba(232, 88, 77, 0.2);
   border-radius: 999px;
@@ -38,58 +38,65 @@
 .nav-links-main {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1.2rem;
   flex-shrink: 0;
 }
 
 .nav-links-main a {
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 1.15rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  transition: color 0.2s ease;
 }
 
 .nav-links-main a:hover { color: var(--coral); }
 
 .nav-search {
   flex: 1;
-  max-width: 560px;
+  max-width: 380px;
   display: flex;
   border-radius: 999px;
   overflow: hidden;
   background: #ffffff;
   border: 1px solid var(--line);
+  height: 36px;
 }
 
 .nav-search:focus-within { border-color: rgba(255, 111, 97, 0.52); }
 
 .nav-search input {
   flex: 1;
-  padding: 0.58rem 0.9rem;
+  padding: 0.45rem 0.75rem;
   background: transparent;
   border: none;
   color: var(--text);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   outline: none;
 }
 
 .nav-search input::placeholder { color: var(--text-dim); }
 
 .nav-search button {
-  padding: 0.58rem 0.9rem;
+  padding: 0.45rem 0.75rem;
   background: linear-gradient(135deg, var(--coral), #ff9274);
   border: none;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .nav-search.mobile { display: none; }
 
 .nav-search-popover { display: none; }
 
-.nav-actions { display: flex; align-items: center; gap: 0.68rem; margin-left: auto; }
+.nav-actions { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
 
 .nav-link {
   color: var(--text-muted);
