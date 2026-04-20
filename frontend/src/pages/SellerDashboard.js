@@ -423,6 +423,7 @@ export default function SellerDashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Redirect to login if not authenticated
   if (!isSeller) {
@@ -446,16 +447,28 @@ export default function SellerDashboard() {
     { to: '/seller/settings', label: 'Settings', icon: '⚙️' },
   ];
 
+  const handleNavClick = () => setSidebarOpen(false);
+
   return (
     <div className="sd-layout">
-      <aside className="sd-sidebar">
+      {/* Mobile Hamburger Button */}
+      <button className="sd-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && <div className="sd-overlay" onClick={() => setSidebarOpen(false)} />}
+
+      <aside className={`sd-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sd-brand">
-          <Link to="/"><span className="logo-icon">♦</span> My<span className="logo-gold">Fashion</span></Link>
+          <Link to="/" onClick={handleNavClick}><span className="logo-icon">♦</span> My<span className="logo-gold">Fashion</span></Link>
           <span className="sd-role">Seller Panel</span>
         </div>
         <nav>
           {links.map(l => (
-            <Link key={l.to} to={l.to} className={`sd-nav-link ${path === l.to ? 'active' : ''}`}>
+            <Link key={l.to} to={l.to} className={`sd-nav-link ${path === l.to ? 'active' : ''}`} onClick={handleNavClick}>
               <span>{l.icon}</span>{l.label}
             </Link>
           ))}
