@@ -8,18 +8,7 @@ router.get('/', async (req, res) => {
   try {
     const { category, search, minPrice, maxPrice, rating, sort, page = 1, limit = 20, featured, brand } = req.query;
     const filter = { isActive: true, isApproved: true };
-    
-    // Handle category slug - convert to ObjectId
-    if (category) {
-      const Category = require('../models/Category');
-      const categoryDoc = await Category.findOne({ slug: category });
-      if (categoryDoc) {
-        filter.category = categoryDoc._id;
-      } else {
-        // If category not found, return empty array
-        return res.json({ products: [], total: 0, page: +page, pages: 0 });
-      }
-    }
+    if (category) filter.category = category;
     if (brand) filter.brand = new RegExp(brand, 'i');
     if (search) filter.$text = { $search: search };
     if (minPrice || maxPrice) { filter.price = {}; if (minPrice) filter.price.$gte = +minPrice; if (maxPrice) filter.price.$lte = +maxPrice; }
@@ -27,8 +16,8 @@ router.get('/', async (req, res) => {
     if (featured === 'true') filter.isFeatured = true;
 
     let sortOpt = { createdAt: -1 };
-    if (sort === 'price_low' || sort === 'price_asc') sortOpt = { price: 1 };
-    else if (sort === 'price_high' || sort === 'price_desc') sortOpt = { price: -1 };
+    if (sort === 'price_asc') sortOpt = { price: 1 };
+    else if (sort === 'price_desc') sortOpt = { price: -1 };
     else if (sort === 'rating') sortOpt = { rating: -1 };
     else if (sort === 'popular') sortOpt = { sold: -1 };
 
