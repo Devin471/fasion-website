@@ -19,6 +19,17 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
     addToCart(product._id, 1);
   };
 
+  const handleBuyNow = () => {
+    if (!isCustomer) {
+      navigate('/login');
+      return;
+    }
+    if (product.stock > 0) {
+      addToCart(product._id, 1);
+      navigate('/checkout');
+    }
+  };
+
   const handleClick = onAddToCart ? () => onAddToCart(product) : handleAddToCart;
 
   return (
@@ -54,16 +65,33 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
         <p className="product-price">₹{product.price}</p>
         <p className="product-stock">Stock: {product.stock}</p>
         {!isAdmin ? (
-          <motion.button
-            className="product-button"
-            onClick={handleClick}
-            disabled={product.stock === 0}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+          <motion.div
+            className="product-actions"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
           >
-            <FaShoppingCart /> {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-          </motion.button>
+            <motion.button
+              className="product-button add-to-cart-btn"
+              onClick={handleClick}
+              disabled={product.stock === 0}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+            >
+              <FaShoppingCart /> {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+            </motion.button>
+            <motion.button
+              className="product-button buy-now-btn"
+              onClick={handleBuyNow}
+              disabled={product.stock === 0}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+            >
+              Buy Now
+            </motion.button>
+          </motion.div>
         ) : (
           <motion.div
             className="admin-actions"
