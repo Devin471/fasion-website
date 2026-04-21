@@ -47,7 +47,9 @@ export default function Navbar() {
   useEffect(() => {
     if (!menuOpen) return;
     const handleClickOutside = e => {
-      if (hamburgerRef.current && !hamburgerRef.current.contains(e.target)) setMenuOpen(false);
+      if (hamburgerRef.current && !hamburgerRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
     };
     const handleKeyDown = e => {
       if (e.key === 'Escape') setMenuOpen(false);
@@ -114,89 +116,89 @@ export default function Navbar() {
                 transition={{ delay: 0.1 }}
               >
                 {/* Main Navigation Links */}
-                <motion.a
-                  href="/"
-                  className="nav-mobile-link"
-                  onClick={() => setMenuOpen(false)}
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.15 }}
                   whileHover={{ x: 10 }}
+                  style={{ width: '100%' }}
                 >
-                  <FaHome /> Home
-                </motion.a>
-                <motion.a
-                  href="/shop"
-                  className="nav-mobile-link"
-                  onClick={() => setMenuOpen(false)}
+                  <Link to="/" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                    <FaHome /> Home
+                  </Link>
+                </motion.div>
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
                   whileHover={{ x: 10 }}
+                  style={{ width: '100%' }}
                 >
-                  <FaShoppingBag /> Shop
-                </motion.a>
-                <motion.a
-                  href="/about"
-                  className="nav-mobile-link"
-                  onClick={() => setMenuOpen(false)}
+                  <Link to="/shop" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                    <FaShoppingBag /> Shop
+                  </Link>
+                </motion.div>
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.25 }}
                   whileHover={{ x: 10 }}
+                  style={{ width: '100%' }}
                 >
-                  <FaInfoCircle /> About
-                </motion.a>
-                <motion.a
-                  href="/contact"
-                  className="nav-mobile-link"
-                  onClick={() => setMenuOpen(false)}
+                  <Link to="/about" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                    <FaInfoCircle /> About
+                  </Link>
+                </motion.div>
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
                   whileHover={{ x: 10 }}
+                  style={{ width: '100%' }}
                 >
-                  <FaPhone /> Contact
-                </motion.a>
+                  <Link to="/contact" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                    <FaPhone /> Contact
+                  </Link>
+                </motion.div>
                 
                 <div className="nav-mobile-divider" />
                 
                 {/* Profile Section - Only Show When Logged In */}
                 {isCustomer ? (
                   <>
-                    <motion.a
-                      href="/profile"
-                      className="nav-mobile-link"
-                      onClick={() => setMenuOpen(false)}
+                    <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.35 }}
                       whileHover={{ x: 10 }}
+                      style={{ width: '100%' }}
                     >
-                      <FaUser /> My Profile
-                    </motion.a>
-                    <motion.a
-                      href="/orders"
-                      className="nav-mobile-link"
-                      onClick={() => setMenuOpen(false)}
+                      <Link to="/profile" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                        <FaUser /> My Profile
+                      </Link>
+                    </motion.div>
+                    <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4 }}
                       whileHover={{ x: 10 }}
+                      style={{ width: '100%' }}
                     >
-                      <FaBox /> My Orders
-                    </motion.a>
-                    <motion.a
-                      href="/wishlist"
-                      className="nav-mobile-link"
-                      onClick={() => setMenuOpen(false)}
+                      <Link to="/orders" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                        <FaBox /> My Orders
+                      </Link>
+                    </motion.div>
+                    <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.45 }}
                       whileHover={{ x: 10 }}
+                      style={{ width: '100%' }}
                     >
-                      <FaHeart /> My Wishlist
-                    </motion.a>
+                      <Link to="/wishlist" className="nav-mobile-link" onClick={() => setMenuOpen(false)}>
+                        <FaHeart /> My Wishlist
+                      </Link>
+                    </motion.div>
                     <div className="nav-mobile-divider" />
                     <motion.button
                       className="nav-mobile-logout"

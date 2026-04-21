@@ -64,6 +64,17 @@
 
 .btn-danger:hover { background: rgba(255, 140, 134, 0.2); }
 
+.btn-buy-now {
+  background: linear-gradient(135deg, var(--gold), #e8a843);
+  color: #1a1412;
+  box-shadow: 0 4px 16px rgba(212, 168, 67, 0.24);
+}
+
+.btn-buy-now:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 0 1px rgba(212, 168, 67, 0.28), 0 12px 32px rgba(212, 168, 67, 0.36);
+}
+
 .btn-sm { padding: 8px 16px; font-size: 12px; }
 .btn-lg { padding: 15px 30px; font-size: 16px; }
 .btn-full { width: 100%; }

@@ -1,6 +1,6 @@
 /* ─── Product Detail — Golden Luxury ───────────────── */
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -8,6 +8,7 @@ import './ProductDetail.css';
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const [product, setProduct] = useState(null);
@@ -30,6 +31,12 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = () => { addToCart(product._id, qty); };
+  const handleBuyNow = () => { 
+    if (product.stock > 0) {
+      addToCart(product._id, qty);
+      navigate('/checkout');
+    }
+  };
   const toggleWish = () => isInWishlist(product._id) ? removeFromWishlist(product._id) : addToWishlist(product._id);
   const submitReview = async e => {
     e.preventDefault();
@@ -89,6 +96,7 @@ export default function ProductDetail() {
               <button onClick={() => setQty(q => Math.min(product.stock, q + 1))}>+</button>
             </div>
             <button className="btn btn-primary" onClick={handleAddToCart} disabled={product.stock === 0}>Add to Cart</button>
+            <button className="btn btn-buy-now" onClick={handleBuyNow} disabled={product.stock === 0}>Buy Now</button>
             <button className={`pd-wish-btn ${wishlisted ? 'active' : ''}`} onClick={toggleWish}>{wishlisted ? '♥' : '♡'}</button>
           </div>
 

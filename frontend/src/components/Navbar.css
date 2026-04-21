@@ -309,17 +309,19 @@
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    width: 200px;
+    width: 220px;
     height: auto;
+    max-height: 80vh;
     background: #ffffff;
     border: 1px solid var(--line-strong);
     border-radius: 14px;
-    min-width: 200px;
+    min-width: 220px;
     padding: 0.4rem 0;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
     z-index: 1100;
     animation: none;
     overflow-y: auto;
+    opacity: 1 !important;
   }
 
   .nav-mobile-menu {
@@ -327,20 +329,24 @@
     flex-direction: column;
     gap: 0;
     margin-top: 0;
+    width: 100%;
   }
 
   .nav-mobile-link {
     color: var(--text-muted);
     text-decoration: none;
-    padding: 0.55rem 1rem;
-    font-size: 0.85rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     border: none;
     transition: color 0.2s ease, background 0.2s ease;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     width: 100%;
     text-align: left;
     background: none;
+    cursor: pointer;
   }
 
   .nav-mobile-link:hover {

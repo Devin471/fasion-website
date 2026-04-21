@@ -29,7 +29,7 @@
 .in-stock { color:#27ae60; font-weight:500; font-size:.88rem; }
 .out-stock { color:#e74c3c; font-weight:500; font-size:.88rem; }
 
-.pd-actions { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+.pd-actions { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap; }
 .pd-qty { display:flex; align-items:center; background:rgba(255,255,255,.05); border:1px solid rgba(212,168,67,.15); border-radius:var(--radius); overflow:hidden; }
 .pd-qty button { width:38px; height:38px; background:transparent; border:none; color:#fff; font-size:1.1rem; cursor:pointer; transition:background .3s; }
 .pd-qty button:hover { background:rgba(212,168,67,.15); }
@@ -63,4 +63,7 @@
   .pd-main { grid-template-columns:1fr; gap:1.5rem; }
   .pd-gallery { flex-direction:column-reverse; }
   .pd-thumbs { flex-direction:row; }
+  .pd-actions { flex-wrap:wrap; }
+  .btn { flex:1; min-width:120px; }
+}
 }
