@@ -39,6 +39,13 @@ export default function Payment() {
     setError('');
     
     try {
+      // Check if Razorpay Key ID is available
+      const razorpayKeyId = process.env.REACT_APP_RAZORPAY_KEY_ID;
+      if (!razorpayKeyId) {
+        throw new Error('Razorpay Key ID is not configured. Please check environment variables.');
+      }
+      console.log('Razorpay Key ID loaded:', razorpayKeyId.slice(0, 10) + '...');
+
       // Load Razorpay script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) throw new Error('Failed to load Razorpay');
@@ -62,7 +69,7 @@ export default function Payment() {
       });
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        key: razorpayKeyId,
         amount: Math.round(total * 100),
         currency: 'INR',
         name: 'MyFashion',
