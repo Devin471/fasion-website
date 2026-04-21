@@ -47,7 +47,7 @@ export default function Checkout() {
   const [errors, setErrors] = useState({});
 
   const subtotal = items.reduce((s, i) => s + (i.product?.price || 0) * (i.quantity || 1), 0);
-  const shipping = 0;
+  const shipping = 1;
   const total = subtotal + shipping;
 
   const cityOptions = useMemo(() => {
