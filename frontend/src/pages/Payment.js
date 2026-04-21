@@ -1,5 +1,5 @@
 /* ─── Payment — Golden Luxury with Razorpay ────────── */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -7,7 +7,7 @@ import api from '../utils/api';
 import './Payment.css';
 
 export default function Payment() {
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, fetchCart } = useCart();
   const { customer } = useAuth();
   const navigate = useNavigate();
   const [method, setMethod] = useState('upi');
@@ -15,8 +15,19 @@ export default function Payment() {
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
   const items = cart.items || [];
   const address = JSON.parse(sessionStorage.getItem('checkoutAddress') || '{}');
+
+  // Fetch cart on mount to ensure items are loaded
+  useEffect(() => {
+    const loadCart = async () => {
+      setLoading(true);
+      if (fetchCart) await fetchCart();
+      setLoading(false);
+    };
+    loadCart();
+  }, [fetchCart]);
 
   const subtotal = items.reduce((s, i) => s + (i.product?.price || 0) * (i.quantity || 1), 0);
   const shipping = delivery === 'express' ? 199 : subtotal > 999 ? 0 : 99;
@@ -124,7 +135,32 @@ export default function Payment() {
     }
   };
 
-  if (items.length === 0) { navigate('/cart'); return null; }
+  // Show loading while cart is being fetched
+  if (loading) {
+    return (
+      <div className="payment-page">
+        <h1>Complete Payment</h1>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Loading your cart...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if cart is empty and address is not set
+  if (items.length === 0 || !address.fullName) {
+    return (
+      <div className="payment-page">
+        <h1>Complete Payment</h1>
+        <div className="payment-error">
+          ❌ {items.length === 0 ? 'Cart is empty' : 'Shipping address not found'}
+        </div>
+        <button onClick={() => navigate(items.length === 0 ? '/cart' : '/checkout')} style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+          {items.length === 0 ? 'Back to Cart' : 'Back to Checkout'}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="payment-page">
