@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { FaShoppingCart, FaEdit, FaTrash, FaStar } from 'react-icons/fa';
+import { FaShoppingCart, FaEdit, FaTrash } from 'react-icons/fa';
 import './ProductCard.css';
 
 function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {

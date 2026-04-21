@@ -5,7 +5,7 @@ import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { AnimatedProductGrid, AnimatedSection, AnimatedCard, AnimatedBrandStrip, HeroContent, ScaledImage } from '../components/AnimatedListComponents';
-import { FaStar, FaTags, FaFire, FaShoppingBag, FaFeather, FaPen } from 'react-icons/fa';
+import { FaStar, FaTags, FaFire, FaShoppingBag, FaPen } from 'react-icons/fa';
 import './Home.css';
 
 export default function Home() {

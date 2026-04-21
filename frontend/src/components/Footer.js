@@ -1,7 +1,7 @@
 /* ─── Footer — Golden Luxury ───────────────────────── */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaFacebook, FaTwitter, FaPinterest, FaApple, FaGooglePlay, FaEnvelope, FaPhone, FaMapMarkerAlt, FaShoppingCart, FaUser, FaInfoCircle, FaShoppingBag } from 'react-icons/fa';
+import { FaInstagram, FaFacebook, FaTwitter, FaPinterest, FaApple, FaGooglePlay, FaShoppingCart, FaUser, FaInfoCircle, FaShoppingBag } from 'react-icons/fa';
 import './Footer.css';
 
 export default function Footer() {
