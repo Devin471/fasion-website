@@ -25,9 +25,20 @@ export function CartProvider({ children }) {
       if (idx > -1) guest.items[idx].quantity += quantity;
       else guest.items.push({ product: productId, quantity });
       localStorage.setItem('guestCart', JSON.stringify(guest));
-      setCart(guest); return;
+      setCart(guest);
+      console.log('Guest cart updated:', guest);
+      return guest;
     }
-    try { const { data } = await api.post('/api/cart', { productId, quantity }); setCart(data); } catch {}
+    try {
+      console.log('Adding to cart - productId:', productId, 'quantity:', quantity);
+      const { data } = await api.post('/api/cart', { productId, quantity });
+      console.log('Cart response:', data);
+      setCart(data);
+      return data;
+    } catch (error) {
+      console.error('API Error adding to cart:', error);
+      throw error;
+    }
   };
 
   const updateQuantity = async (itemId, quantity) => {
