@@ -11,22 +11,47 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
   const { addToCart } = useCart();
   const { isCustomer } = useAuth();
 
-  const handleAddToCart = () => {
-    if (!isCustomer) {
-      navigate('/login');
-      return;
+  const handleAddToCart = async () => {
+    try {
+      if (!isCustomer) {
+        navigate('/login');
+        return;
+      }
+      if (!product._id) {
+        console.error('Product ID missing:', product);
+        alert('Error: Product ID not found');
+        return;
+      }
+      await addToCart(product._id, 1);
+      alert('✅ Added to cart!');
+      console.log('Product added to cart:', product._id);
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      alert('❌ Failed to add to cart');
     }
-    addToCart(product._id, 1);
   };
 
-  const handleBuyNow = () => {
-    if (!isCustomer) {
-      navigate('/login');
-      return;
-    }
-    if (product.stock > 0) {
-      addToCart(product._id, 1);
+  const handleBuyNow = async () => {
+    try {
+      if (!isCustomer) {
+        navigate('/login');
+        return;
+      }
+      if (product.stock <= 0) {
+        alert('⚠️ Product out of stock');
+        return;
+      }
+      if (!product._id) {
+        console.error('Product ID missing:', product);
+        alert('Error: Product ID not found');
+        return;
+      }
+      await addToCart(product._id, 1);
+      console.log('Product added, navigating to checkout:', product._id);
       navigate('/checkout');
+    } catch (error) {
+      console.error('Buy now error:', error);
+      alert('❌ Failed to process buy now');
     }
   };
 
@@ -72,8 +97,9 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
             transition={{ delay: 0.1 }}
           >
             <motion.button
+              type="button"
               className="product-button add-to-cart-btn"
-              onClick={handleClick}
+              onClick={(e) => { e.preventDefault(); handleClick(); }}
               disabled={product.stock === 0}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -82,8 +108,9 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
               <FaShoppingCart /> {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
             </motion.button>
             <motion.button
+              type="button"
               className="product-button buy-now-btn"
-              onClick={handleBuyNow}
+              onClick={(e) => { e.preventDefault(); handleBuyNow(); }}
               disabled={product.stock === 0}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -100,6 +127,7 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
             transition={{ delay: 0.2 }}
           >
             <motion.button
+              type="button"
               className="edit-btn"
               onClick={() => onEdit(product)}
               whileHover={{ scale: 1.05 }}
@@ -108,8 +136,9 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
               <FaEdit /> Edit
             </motion.button>
             <motion.button
+              type="button"
               className="delete-btn"
-              onClick={() => onDelete(product.id)}
+              onClick={() => onDelete(product._id)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
