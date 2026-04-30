@@ -62,6 +62,10 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
     }
   };
 
+  const handleImageClick = () => {
+    navigate(`/product/${product._id}`);
+  };
+
   return (
     <motion.div
       className="product-card"
@@ -75,6 +79,8 @@ function ProductCard({ product, onAddToCart, isAdmin, onDelete, onEdit }) {
         className="product-image-container"
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
+        onClick={handleImageClick}
+        style={{ cursor: 'pointer' }}
       >
         <img 
           src={product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'} 
